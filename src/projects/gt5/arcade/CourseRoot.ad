@@ -12,15 +12,10 @@
 
 
 
-
-
-
-
 module CourseRoot
 {
     hidden.visible = false;
     hidden::CourseThumb::map.from_disk = false;
-
 
     method open(context, from_prev_page)
     {
@@ -47,6 +42,7 @@ module CourseRoot
 
             }
         }
+
         context.pushPage(CourseRoot);
         return true;
     }
@@ -73,7 +69,6 @@ module CourseRoot
         ArcadeProject::ignorePadEvent(false);
     }
 
-
     method reset_widgets()
     {
         CourseMap::map.image_path = "";
@@ -85,7 +80,6 @@ module CourseRoot
 
         DetailBox.reset();
     }
-
 
     method onInitialize(context)
     {
@@ -102,11 +96,8 @@ module CourseRoot
         context.pushEvent(main::menu::MFunctionEvent(postInitialize, context));
     }
 
-
     method postInitialize(context)
     {
-
-
         CourseFinder.appear(true);
 
         self.insensitive = false;
@@ -122,7 +113,6 @@ module CourseRoot
     method onFinalize(context)
     {}
 
-
     method onRealize(context)
     {
 
@@ -134,7 +124,7 @@ module CourseRoot
     method onKeyPress(context, event)
     {
         LeaveDetectUtil::activated(context, event);
-        return 0;
+        return EVENTRESULT_CONTINUE;
     }
 
 
@@ -148,7 +138,6 @@ module CourseRoot
         {
             var cars = main::GAME_STATUS.user_profile.option.favorite_cars;
             var is_dirt = gtengine::MSpecDB::isDirtSnow(course_code) ? true : nil;
-
 
             var res = CarData::getCarList(nil, nil, is_dirt, nil);
 
@@ -234,8 +223,7 @@ module CourseRoot
             self.sCurrentTab.set_finder(context, self.finder_);
 
             var item_count = self.finder_.getItemCount();
-            
-            if (0 < item_count)
+            if (item_coun> 0)
             {
                 PictureFlowingLayer.setItemCount(context, item_count);
             
@@ -249,7 +237,6 @@ module CourseRoot
                 switch (id)
                 {
                     case TAB_TYPE::EDIT:
-
                         Body::empty_message::FadeEffect.restart();
                         Body::empty_message.text = context.translate(CourseRoot, "MESSAGE_WHEN_EDIT_COURSES_ARE_EMPTY");
                         Body::empty_message.visible = true;
@@ -292,9 +279,9 @@ module CourseRoot
             if (on_root_open)
                 self.MoveEffect.setStartDuration(0, self.sDuration);
             else
-                self.MoveEffect.setStartDuration(0, 0f);
+                self.MoveEffect.setStartDuration(0, 0.0);
 
-            self.MoveEffect.on_effect_end = *self.*end_move;
+            self.MoveEffect.on_effect_end = self.*end_move;
             self.MoveEffect.start();
         }
 
@@ -413,7 +400,7 @@ module CourseRoot
             self.sFocusIndex = 0;
             gArcadeSequence.movePrevPage(context);
 
-            return 2;
+            return EVENTRESULT_FILTER;
         }
 
         method set_course(context, crs_param)
@@ -426,7 +413,7 @@ module CourseRoot
                 CourseMap.FadeActor.start();
             };
 
-            CourseMap::map.on_delay_load_complete = *self.*delay_load_complete;
+            CourseMap::map.on_delay_load_complete = self.*delay_load_complete;
             CourseMap::map.image_path = "piece/course_map_LL/%{course_info.map}.img";
             CourseMap::reflected_map.image_path = "piece/course_map_LL/%{course_info.map}.img";
             CourseMap.FadeActor.reset();
@@ -475,7 +462,7 @@ module CourseRoot
 
         method cb_init_course(context, candidate_data, item_w, arg)
         {
-            var [crs_param, is_enable] = candidate_data.value_;
+            |var crs_param, var is_enable| = candidate_data.value_;
             var course_code = crs_param.course_code_;
 
             item_w.map.from_disk = true;
@@ -496,7 +483,7 @@ module CourseRoot
         method cb_selected_course(context, folder_data, func_close, arg)
         {
             var candidate_data = folder_data.getItemData();
-            var [crs_param, is_enable] = candidate_data.value_;
+            |var crs_param, var is_enable| = candidate_data.value_;
             var course_code = crs_param.course_code_;
 
             if (!is_enable)
@@ -525,7 +512,7 @@ module CourseRoot
 
         method cb_focused_course(context, candidate_data, item_w, arg)
         {
-            var [crs_param, is_enable] = candidate_data.value_;
+            |var crs_param, var is_enable| = candidate_data.value_;
             var course_code = crs_param.course_code_;
             var course_info = CourseData::getCourseInfo(course_code);
             var is_reverse = course_info.is_reverse;
@@ -571,12 +558,12 @@ module CourseRoot
             PictureFlowingLayer.setIndex(context, candidate_data.item_index_, course_code);
 
             context.addTimeOut("change_course", set_course, context, crs_param);
-            context.setTimeOut("change_course", 0.5f);
+            context.setTimeOut("change_course", 0.5);
         }
 
         method cb_changed_course(context, candidate_data, item_w, old_candidate_data, old_item_w, arg)
         {
-            PictureFlowingLayer::ListBox.interpolate_ratio = 0.2f;
+            PictureFlowingLayer::ListBox.interpolate_ratio = 0.2;
         }
 
         method makeInitialDataForCourse(context, tab_id)
@@ -664,6 +651,7 @@ module CourseRoot
                     if (course_info.entry_max == 1)
                         is_enable = false;
                 }
+
                 if (ArcadeProject::ArcadeModeEnum::DRIFT_ATTACK == gArcadeSequence.getArcadeMode())
                 {
                     var course_info = CourseData::getCourseInfo(crs_param.course_code_);
@@ -690,10 +678,10 @@ module CourseRoot
         method set_edit_course(context, edit_course_data)
         {
             var delay_load_complete = method(context)
-                {
-                    CourseMap.FadeActor.start();
-                };
-            CourseMap::map.on_delay_load_complete = *self.*delay_load_complete;
+            {
+                CourseMap.FadeActor.start();
+            };
+            CourseMap::map.on_delay_load_complete = self.*delay_load_complete;
             CourseMap::map.image_path = edit_course_data.thumbnail_L_filename;
             CourseMap::reflected_map.image_path = edit_course_data.thumbnail_L_filename;
             CourseMap.FadeActor.reset();
@@ -709,7 +697,7 @@ module CourseRoot
 
         method cb_init_edit_course(context, candidate_data, item_w, arg)
         {
-            var [edit_course_data, course_pathway, is_enable] = candidate_data.value_;
+            |var edit_course_data, var course_pathway, var is_enable| = candidate_data.value_;
 
             item_w.map.from_disk = true;
             item_w.setEditCourseInfo(context, edit_course_data);
@@ -720,7 +708,7 @@ module CourseRoot
         method cb_selected_edit_course(context, folder_data, func_close, arg)
         {
             var candidate_data = folder_data.getItemData();
-            var [edit_course_data, course_pathway, is_enable] = candidate_data.value_;
+            |var edit_course_data, var course_pathway, var is_enable| = candidate_data.value_;
             var course_code = course_pathway.TemplateCourseCode;
             var course_label = main::gtengine::MSpecDB::getCourseLabel(course_code);
 
@@ -738,7 +726,7 @@ module CourseRoot
 
         method cb_focused_edit_course(context, candidate_data, item_w, arg)
         {
-            var [edit_course_data, course_pathway, is_enable] = candidate_data.value_;
+            |var edit_course_data, var course_pathway, var is_enable| = candidate_data.value_;
             var course_code = course_pathway.TemplateCourseCode;
 
             BalloonTip.set_value(context, item_w, edit_course_data.title, 20);
@@ -748,12 +736,12 @@ module CourseRoot
             PictureFlowingLayer.setIndex(context, candidate_data.item_index_, course_code);
 
             context.addTimeOut("change_edit_course", set_edit_course, context, edit_course_data);
-            context.setTimeOut("change_edit_course", 0.5f);
+            context.setTimeOut("change_edit_course", 0.5);
         }
 
         method cb_changed_edit_course(context, candidate_data, item_w, old_candidate_data, old_item_w, arg)
         {
-            PictureFlowingLayer::ListBox.interpolate_ratio = 0.2f;
+            PictureFlowingLayer::ListBox.interpolate_ratio = 0.2;
         }
 
         method makeInitialDataForEditCourse(context, tab_id)
@@ -773,7 +761,7 @@ module CourseRoot
                 if (ArcadeProject::ArcadeModeEnum::SPLIT_BATTLE == gArcadeSequence.getArcadeMode())
                 {
 
-                    if (edit_course_data.weather_value0 == 1f && edit_course_data.weather_accel == 0)
+                    if (edit_course_data.weather_value0 == 1.0 && edit_course_data.weather_accel == 0)
                         is_enable = true;
                     else
                         is_enable = false;
@@ -807,12 +795,12 @@ module CourseRoot
         method onActivate(context, event)
         {
             if (event.widget == CourseFinder.sCurrentTab.tab_w_)
-                return 2;
+                return EVENTRESULT_FILTER;
 
             main::sound.play("tab_switch");
 
             CourseFinder.change_tab(context, event.widget.id_);
-            return 2;
+            return EVENTRESULT_FILTER;
         }
 
         method focus_navigate(ON)
@@ -823,7 +811,6 @@ module CourseRoot
                 for (var it = self.first; it != nil; it = it.next_widget)
                 {
                     if (!it.is_face && CourseFinder.sCurrentTab != nil)
-
                         it.insensitive = it != CourseFinder.sCurrentTab.tab_w_;
                 }
             }
@@ -833,7 +820,6 @@ module CourseRoot
                 for (var it = self.first; it != nil; it = it.next_widget)
                 {
                     if (!it.is_face)
-
                         it.insensitive = false;
                 }
             }
@@ -842,14 +828,14 @@ module CourseRoot
         method onFocusLeave(context, event)
         {
             focus_navigate(true);
-            return 2;
+            return EVENTRESULT_FILTER;
         }
 
         method onFocusEnter(context, event)
         {
             BalloonTip.reset_value();
             focus_navigate(false);
-            return 2;
+            return EVENTRESULT_FILTER;
         }
     }
 
@@ -870,7 +856,7 @@ module CourseRoot
                     self.Info::FadeEffect.start();
                 };
 
-            self.Info::logo.on_delay_load_complete = *self.*delay_load_complete;
+            self.Info::logo.on_delay_load_complete = self.*delay_load_complete;
             self.Info::logo.image_path = "piece/course_logo_L/%{course_info.logo}.img";
             self.Info::flag.image_path = "piece/flag_menu/%{course_info.flag}.img";
 
@@ -890,7 +876,7 @@ module CourseRoot
 
             self.Info::logo.on_delay_load_complete = nil;
             self.Info::logo.image_path = "";
-            self.Info::flag.on_delay_load_complete = *self.*delay_load_complete;
+            self.Info::flag.on_delay_load_complete = self.*delay_load_complete;
             self.Info::flag.image_path = "piece/flag_menu/PDI.img";
 
             var is_ps3 = !CourseData::isPS2(edit_course_data.genre);
@@ -939,7 +925,6 @@ module CourseRoot
 
             var end_fade = method(context) 
             {
-                
                 self.Length::value.text = CourseData::getCourseLengthText(context, CourseRoot, course_info);
                 self.Length::value.TransientReset();
                 
@@ -954,8 +939,9 @@ module CourseRoot
                 
                 self.FadeEffect.on_effect_end = nil;
             }
+
             self.FadeEffect.reset();
-            self.FadeEffect.on_effect_end = *self.*end_fade;
+            self.FadeEffect.on_effect_end = self.*end_fade;
             self.FadeEffect.start();
         }
 
@@ -1003,7 +989,7 @@ module CourseRoot
                 self.FadeEffect.on_effect_end = nil;
             }
             self.FadeEffect.reset();
-            self.FadeEffect.on_effect_end = *self.*end_fade;
+            self.FadeEffect.on_effect_end = self.*end_fade;
             self.FadeEffect.start();
         }
 
@@ -1037,7 +1023,7 @@ module CourseRoot
             self.ListBox.postRedraw();
             self.ListBox.setItemTemplate(context, hidden::Item);
             self.ListBox.setItemCount(item_count);
-            self.ListBox.interpolate_ratio = 1f;
+            self.ListBox.interpolate_ratio = 1.0;
         }
 
         method setIndex(context, index, course_code)
@@ -1126,9 +1112,9 @@ module CourseRoot
             {
                 var target_x = pdistd::MRandom::GetValue(self.x, self.x + self.w);
                 var target_y = pdistd::MRandom::GetValue(self.y, self.y + self.h);
-                self.ImageFace.ChaseActor.target_x = target_x - self.ImageFace.w * 0.5f;
-                self.ImageFace.ChaseActor.target_y = target_y - self.ImageFace.h * 0.5f;
-                var sleep_time = 0.1f * pdistd::MRandom::GetValue(10, 20);
+                self.ImageFace.ChaseActor.target_x = target_x - self.ImageFace.w * 0.5;
+                self.ImageFace.ChaseActor.target_y = target_y - self.ImageFace.h * 0.5;
+                var sleep_time = 0.1 * pdistd::MRandom::GetValue(10, 20);
                 Thread::Sleep(sleep_time);
             }
         }
@@ -1143,14 +1129,14 @@ module CourseRoot
         method change_picture(picture_index)
         {
 
-            var fade_start_delay = 0.1f * pdistd::MRandom::GetValue(30, 60);
+            var fade_start_delay = 0.1 * pdistd::MRandom::GetValue(30, 60);
 
-            var scale = 0.01f * pdistd::MRandom::GetValue(50, 100);
+            var scale = 0.01 * pdistd::MRandom::GetValue(50, 100);
 
             var velocity_x = pdistd::MRandom::GetValue(-50, 50);
             var velocity_y = pdistd::MRandom::GetValue(-50, 50);
 
-            var blur_start_delay = 0.1f * pdistd::MRandom::GetValue(15, 45);
+            var blur_start_delay = 0.1 * pdistd::MRandom::GetValue(15, 45);
 
             var picture_paths = ["piece/course_img_01", "piece/course_img_02"];
             if (picture_index == nil)
@@ -1178,7 +1164,7 @@ module CourseRoot
                 self.change_picture(self.picture_index_);
             }
 
-            self.ImageFace::FadeEffect.on_effect_end = *self.*fade_end;
+            self.ImageFace::FadeEffect.on_effect_end = self.*fade_end;
 
             var delay_load_complete = method(context)
             {
@@ -1190,7 +1176,7 @@ module CourseRoot
             var image_path = "%{picture_path}/%{self.course_img_}.img";
             if (self.ImageFace.image_path != image_path)
             {
-                self.ImageFace.on_delay_load_complete = *self.*delay_load_complete;
+                self.ImageFace.on_delay_load_complete = self.*delay_load_complete;
                 self.ImageFace.image_path = image_path;
             }
             else

@@ -12,7 +12,7 @@
 
 
 
-module Status2Root
+module ROOT
 {
     hidden.visible = false;
 
@@ -29,7 +29,7 @@ module Status2Root
         context.cursor_visible = true;
         self.closed = true;
 
-        self.modal_page = main::SequenceUtil::ModalPage(context, Status2Root);
+        self.modal_page = main::SequenceUtil::ModalPage(context, ROOT);
         self.modal_page.open();
         return true;
     }
@@ -47,7 +47,7 @@ module Status2Root
 
         self.cursor_visible = nil;
 
-        Status2Root.setFocus(nil);
+        ROOT.setFocus(nil);
 
         var actor = self.CloseActor;
         actor.forward();
@@ -100,7 +100,7 @@ module Status2Root
             function init(context, item)
             {
                 var current = GAME_STATUS.user_profile.record.event_record.getOfflineTrophyCount();
-                var total = Status2Root.total_trophy_count != nil ? Status2Root.total_trophy_count : "--";
+                var total = ROOT.total_trophy_count != nil ? ROOT.total_trophy_count : "--";
                 var percent_f = (current.toFloat() / total.toFloat()) * 100;
                 if (percent_f > 0 && percent_f < 1)
                     percent_f = 1;
@@ -122,7 +122,7 @@ module Status2Root
             function init(context, item)
             {
                 var current = GAME_STATUS.user_profile.record.event_record.getLicenseTrophyCount();
-                var total = Status2Root.total_license_trophy_count != nil ? Status2Root.total_license_trophy_count : "--";
+                var total = ROOT.total_license_trophy_count != nil ? ROOT.total_license_trophy_count : "--";
                 item.setValue("", current, "/%{total}");
             }   
         }
@@ -132,7 +132,7 @@ module Status2Root
             function init(context, item)
             {
                 var current = GAME_STATUS.user_profile.record.event_record.getStars();
-                var total = Status2Root.total_star_count != nil ? Status2Root.total_star_count : "--";
+                var total = ROOT.total_star_count != nil ? ROOT.total_star_count : "--";
                 item.setValue("", current, "/%{total}");
             }   
         }
@@ -144,7 +144,7 @@ module Status2Root
                 var garage_cars = GAME_STATUS.user_profile.garage.getCarCount();
                 var stockyard_cars = GAME_STATUS.user_profile.garage_stockyard_carcount;
 
-                var [value_l, value_r] = checkRussian(manager.translate("Unit", "CARS").build(""));
+                |var value_l, var value_r| = checkRussian(manager.translate("Unit", "CARS").build(""));
                 item.setValue(value_l, garage_cars + stockyard_cars, value_r);
             }   
         }
@@ -155,7 +155,7 @@ module Status2Root
             {
                 var races = GAME_STATUS.user_profile.total_aspec_race_complete + GAME_STATUS.user_profile.total_bspec_race_complete;
 
-                var [value_l, value_r] = checkRussian(manager.translate("Unit", "RACES").build(""));
+                |var value_l, var value_r| = checkRussian(manager.translate("Unit", "RACES").build(""));
                 item.setValue(value_l, races, value_r);
             }   
         }
@@ -166,7 +166,7 @@ module Status2Root
             {
                 var wins = GAME_STATUS.user_profile.total_aspec_win + GAME_STATUS.user_profile.total_bspec_win;
 
-                var [value_l, value_r] = checkRussian(manager.translate("Unit", "WINS").build(""));
+                |var value_l, var value_r| = checkRussian(manager.translate("Unit", "WINS").build(""));
                 item.setValue(value_l, wins, value_r);
             }   
         }
@@ -231,7 +231,7 @@ module Status2Root
             {
                 var photos = GAME_STATUS.user_profile.total_photo_count;
 
-                var [value_l, value_r] = checkRussian(manager.translate("Unit", "PHOTOS").build(""));
+                |var value_l, var value_r| = checkRussian(manager.translate("Unit", "PHOTOS").build(""));
                 item.setValue(value_l, photos, value_r);
             }   
         }
@@ -242,7 +242,7 @@ module Status2Root
             {
                 var colors = GAME_STATUS.user_profile.item.paint.getCount();
 
-                var [value_l, value_r] = checkRussian(manager.translate("Unit", "COLORS").build(""));
+                |var value_l, var value_r| = checkRussian(manager.translate("Unit", "COLORS").build(""));
                 item.setValue(value_l, colors, value_r);
             }   
         }
@@ -253,7 +253,7 @@ module Status2Root
             {
                 var racing_gears = GAME_STATUS.user_profile.item.racing_gear.getItemVarietyCount();
 
-                var [value_l, value_r] = checkRussian(manager.translate("Unit", "ITEMS").build(""));
+                |var value_l, var value_r| = checkRussian(manager.translate("Unit", "ITEMS").build(""));
                 item.setValue(value_l, racing_gears, value_r);
             }   
         }
@@ -277,7 +277,7 @@ module Status2Root
                 item.setCarIcon("win");
                 var car = GAME_STATUS.user_profile.max_win_car;
 
-                var [value_l, value_r] = checkRussian(manager.translate("Unit", "WINS").build(""));
+                |var value_l, var value_r| = checkRussian(manager.translate("Unit", "WINS").build(""));
                 item.setValue(value_l, car.record, value_r);
                 item.setValue2(car.code == gtengine::MSpecDB::NO_CODE ? "---" : gtengine::MSpecDB::getCarName(car.code));
 
@@ -304,7 +304,7 @@ module Status2Root
                 var max_count = 0;
                 var list = KeyValueUtil::getList("favorite_tuner");
 
-                foreach (var [key, value] in list)
+                foreach (|var key, var value| in list)
                 {
                     var count = value.toInt();
                     if (max_count < count)
@@ -314,7 +314,7 @@ module Status2Root
                     }
                 }
 
-                var [value_l, value_r] = checkRussian(manager.translate("Unit", "CARS").build(""));
+                |var value_l, var value_r| = checkRussian(manager.translate("Unit", "CARS").build(""));
                 item.setValue(value_l, max_count, value_r);
 
                 if (tuner_label != "")
@@ -337,7 +337,7 @@ module Status2Root
                 var max_mileage = 0;
                 var list = KeyValueUtil::getList("course_mileage");
 
-                foreach (var [key, value] in list)
+                foreach (|var key, var value| in list)
                 {
                     var mileage = value.toFloat();
                     if (max_mileage < mileage)
@@ -449,9 +449,9 @@ module Status2Root
                 var dom = xml.result;
                 var dom_nodes = dom["event_information"][0];
 
-                Status2Root.total_trophy_count = dom_nodes["total_trophy_count"][0].value;
-                Status2Root.total_star_count = dom_nodes["total_star_count"][0].value;
-                Status2Root.total_license_trophy_count = dom_nodes["total_license_trophy_count"][0].value;
+                ROOT.total_trophy_count = dom_nodes["total_trophy_count"][0].value;
+                ROOT.total_star_count = dom_nodes["total_star_count"][0].value;
+                ROOT.total_license_trophy_count = dom_nodes["total_license_trophy_count"][0].value;
             }
 
             self.MBox.clearChildren(context);
@@ -481,7 +481,7 @@ module Status2Root
         actor.forward();
         actor.restart();
 
-        actor.on_effect_end = (context) => 
+        actor.on_effect_end = function(context)
         {
             actor.on_effect_end = nil;
 
@@ -489,7 +489,7 @@ module Status2Root
 
             ContextMain.enableInput();
 
-            Status2Root.closed = false;
+            ROOT.closed = false;
         };
 
         self.CloseActor.stop();
@@ -513,7 +513,7 @@ module Status2Root
         main::sound.play("cancel");
         self.close(context);
 
-        return 2;
+        return EVENTRESULT_FILTER;
     }
 
     method onKeyPress(context, event)

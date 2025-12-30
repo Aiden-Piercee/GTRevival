@@ -12,7 +12,7 @@
 
 
 
-module MonitorRoot
+module ROOT
 {
     static show_extra;
     static sResult;
@@ -88,14 +88,14 @@ module MonitorRoot
         aspect_ratio.SliderY.slider.index = option.monitor_aspect_ratio_y;
         aspect_ratio.CheckButton.active = option.monitor_aspect_ratio_enable;
 
-        SettingFrame::Pane::ScrolledBody::clip::space::FrameBorderX.slider.index = (option.monitor_border[0] * 100f + 0.5f).toInt();
-        SettingFrame::Pane::ScrolledBody::clip::space::FrameBorderY.slider.index = (option.monitor_border[1] * 100f + 0.5f).toInt();
-        SettingFrame::Pane::ScrolledBody::clip::space::ScreenRoundAngle.slider.index = (option.monitor_round_angle + 0.5f).toInt();
-        SettingFrame::Pane::ScrolledBody::clip::space::ViewAngleScale.slider.index = (option.monitor_view_angle_scale * 100f + 0.5f).toInt();
-        SettingFrame::Pane::ScrolledBody::clip::space::ViewAngle.vbox.Slider.slider.index = (option.monitor_view_angle + 0.5f).toInt();
+        SettingFrame::Pane::ScrolledBody::clip::space::FrameBorderX.slider.index = (option.monitor_border[0] * 100.0 + 0.5).toInt();
+        SettingFrame::Pane::ScrolledBody::clip::space::FrameBorderY.slider.index = (option.monitor_border[1] * 100.0 + 0.5).toInt();
+        SettingFrame::Pane::ScrolledBody::clip::space::ScreenRoundAngle.slider.index = (option.monitor_round_angle + 0.5).toInt();
+        SettingFrame::Pane::ScrolledBody::clip::space::ViewAngleScale.slider.index = (option.monitor_view_angle_scale * 100.0 + 0.5).toInt();
+        SettingFrame::Pane::ScrolledBody::clip::space::ViewAngle.vbox.Slider.slider.index = (option.monitor_view_angle + 0.5).toInt();
 
         var frame_delay = SettingFrame::Pane::ScrolledBody::clip::space::FrameDelay.vbox;
-        frame_delay.Slider.slider.index = (option.monitor_frame_delay * 100f + 0.5f).toInt();
+        frame_delay.Slider.slider.index = (option.monitor_frame_delay * 100.0 + 0.5).toInt();
         frame_delay.CheckButton.active = option.monitor_frame_delay_enable;
         frame_delay.PixelJitterEnable.vbox.CheckButton.active = option.monitor_pixel_jitter_enable;
 
@@ -106,7 +106,7 @@ module MonitorRoot
 
         var flip_timing = SettingFrame::Pane::ScrolledBody::clip::space::FlipTiming.vbox;
         flip_timing.CheckButton.active = option.monitor_flip_timing_enable;
-        flip_timing.Slider.slider.index = (option.monitor_flip_timing * 1000f + 0.5f).toInt();
+        flip_timing.Slider.slider.index = (option.monitor_flip_timing * 1000.0 + 0.5).toInt();
 
         update_menu(context);
     }
@@ -133,17 +133,17 @@ module MonitorRoot
         option.monitor_aspect_ratio_x = aspect_ratio.SliderX.slider.index;
         option.monitor_aspect_ratio_y = aspect_ratio.SliderY.slider.index;
         option.monitor_aspect_ratio_enable = aspect_ratio.CheckButton.active;
-        option.monitor_border[0] = SettingFrame::Pane::ScrolledBody::clip::space::FrameBorderX.slider.index.toFloat() / 100f;
-        option.monitor_border[1] = SettingFrame::Pane::ScrolledBody::clip::space::FrameBorderY.slider.index.toFloat() / 100f;
+        option.monitor_border[0] = SettingFrame::Pane::ScrolledBody::clip::space::FrameBorderX.slider.index.toFloat() / 100.0;
+        option.monitor_border[1] = SettingFrame::Pane::ScrolledBody::clip::space::FrameBorderY.slider.index.toFloat() / 100.0;
         option.monitor_round_angle = SettingFrame::Pane::ScrolledBody::clip::space::ScreenRoundAngle.slider.index.toFloat();
         option.monitor_round_xy = 0;
-        option.monitor_view_angle_scale = SettingFrame::Pane::ScrolledBody::clip::space::ViewAngleScale.slider.index.toFloat() / 100f;
+        option.monitor_view_angle_scale = SettingFrame::Pane::ScrolledBody::clip::space::ViewAngleScale.slider.index.toFloat() / 100.0;
 
         var view_angle = SettingFrame::Pane::ScrolledBody::clip::space::ViewAngle.vbox;
         option.monitor_view_angle = view_angle.Slider.slider.index.toFloat();
 
         var frame_delay = SettingFrame::Pane::ScrolledBody::clip::space::FrameDelay.vbox;
-        option.monitor_frame_delay = frame_delay.Slider.slider.index.toFloat() / 100f;
+        option.monitor_frame_delay = frame_delay.Slider.slider.index.toFloat() / 100.0;
         option.monitor_frame_delay_enable = frame_delay.CheckButton.active;
         option.monitor_pixel_jitter_enable = frame_delay.PixelJitterEnable.CheckButton.active;
 
@@ -155,7 +155,7 @@ module MonitorRoot
 
         var flip_timing = SettingFrame::Pane::ScrolledBody::clip::space::FlipTiming.vbox;
         option.monitor_flip_timing_enable = flip_timing.CheckButton.active;
-        option.monitor_flip_timing = flip_timing.Slider.slider.index.toFloat() / 1000f;
+        option.monitor_flip_timing = flip_timing.Slider.slider.index.toFloat() / 1000.0;
 
         option.apply();
     }
@@ -226,7 +226,7 @@ module MonitorRoot
         for (var i = 0; i < layout_preset.size; i++)
             layout_list[i] = "%d x %d".format(layout_preset[i][0], layout_preset[i][1]);
         
-        OptionMenuUtil::initialize(context, MonitorRoot, SettingFrame::Pane::ScrolledBody::clip::space::MonitorLayout.OptionMenu, hidden::LayoutItem, layout_list);
+        OptionMenuUtil::initialize(context, ROOT, SettingFrame::Pane::ScrolledBody::clip::space::MonitorLayout.OptionMenu, hidden::LayoutItem, layout_list);
 
         SettingFrame::Pane::ScrolledBody::clip::space::MonitorIndex.slider.max = show_extra ? 15 : 5;
         SettingFrame::Pane::ScrolledBody::clip::space::MonitorIndex.slider.setup(context);
@@ -252,18 +252,18 @@ module MonitorRoot
         view_angle_scale.slider.setup(context);
 
         var framet_delay = SettingFrame::Pane::ScrolledBody::clip::space::FrameDelay.vbox;
-        framet_delay.Slider.slider.format_callback = (context, value) => 
+        framet_delay.Slider.slider.format_callback = function(context, value)
         {
-            var scale = 0.01f;
-            return "%.2f".format(scale * value + 0.005f);
+            var scale = 0.01;
+            return "%.2f".format(scale * value + 0.005);
         };
         framet_delay.Slider.slider.setup(context);
 
         var flip_timing = SettingFrame::Pane::ScrolledBody::clip::space::FlipTiming.vbox;
-        flip_timing.Slider.slider.format_callback = (context, value) => 
+        flip_timing.Slider.slider.format_callback = function(context, value) 
         {
-            var scale = 0.1f;
-            return "%.1f".format(scale * value + 0.05f);
+            var scale = 0.1;
+            return "%.1f".format(scale * value + 0.05);
         };
         flip_timing.Slider.slider.setup(context);
 
@@ -271,7 +271,7 @@ module MonitorRoot
         SettingFrame.adjust_scrolled_body();
 
         var focus_w = SettingFrame::Pane::ScrolledBody::clip::space::MonitorMode.OptionMenu;
-        MonitorRoot.setFocus(focus_w);
+        ROOT.setFocus(focus_w);
         SettingFrame::Pane::ScrolledBody::clip::space.parent.warp(focus_w);
     }
 
@@ -287,13 +287,13 @@ module MonitorRoot
         main::sound.play("cancel");
         if (gDirectApplyMode)
         {
-            MonitorRoot.apply();
-            MonitorRoot.close(context);
+            ROOT.apply();
+            ROOT.close(context);
         }
         else
-            MonitorRoot.setFocus(SettingFrame::Pane::Foot::Cancel);
+            ROOT.setFocus(SettingFrame::Pane::Foot::Cancel);
 
-        return 2;
+        return EVENTRESULT_FILTER;
     }
 
     method startDNSBrowser()
@@ -316,9 +316,9 @@ module MonitorRoot
         {
             sBrowserEnable = true;
             main::MMmDNSBrowser.setContinuousMode(true);
-            main::MMmDNSBrowser.browseRequest(main::MMmDNSConfig, nil, (args) => 
+            main::MMmDNSBrowser.browseRequest(main::MMmDNSConfig, nil, function(args)
             {
-                var [context, requestId, service] = args;
+                |var context, var requestId, var service| = args;
                 sServiceList[service.name] = service;
             });
         }
@@ -360,23 +360,23 @@ module MonitorRoot
         function onActivate(context)
         {
             main::sound.play("ok");
-            if (DialogUtil::openConfirmDialog(context, DialogUtil::YESNO, context.translate(MonitorRoot, "DO_YOU_START_SUBMONITOR")))
+            if (DialogUtil::openConfirmDialog(context, DialogUtil::YESNO, context.translate(ROOT, "DO_YOU_START_SUBMONITOR")))
             {
                 ContextMain.disableInput();
                 ContextMain.filterKeyEvent();
                 CursorUtil::setCursor(ContextMain, "wait");
 
-                MonitorRoot.apply(context);
+                ROOT.apply(context);
                 OptionRoot.saveIfChanged(context);
 
                 main::ORG.monitor_race_display_enable = false;
-                SoundUtil::BGMFadeout(1f);
+                SoundUtil::BGMFadeout(1.0);
 
                 SaveDataUtilGT6::syncBackgroundSave();
-                MonitorRoot.close(context, "multimonitor_client");
+                ROOT.close(context, "multimonitor_client");
             }
 
-            return 2;
+            return EVENTRESULT_FILTER;
         }
     }
 
@@ -387,7 +387,7 @@ module MonitorRoot
             if (sServiceList.size != 0)
             {
                 main::sound.play("ok");
-                foreach (var [key, val] in sServiceList)
+                foreach (|var key, var val| in sServiceList)
                 {
                     var service = val;
                     var ipaddr = service.address.split(":")[0];
@@ -398,7 +398,7 @@ module MonitorRoot
             else
                 main::sound.play("disable");
 
-            return 2;
+            return EVENTRESULT_FILTER;
         }
     }
 
@@ -407,9 +407,9 @@ module MonitorRoot
         method onActivate(context)
         {
             main::sound.play("ok");
-            MonitorRoot.apply();
-            MonitorRoot.close(context);
-            return 2;
+            ROOT.apply();
+            ROOT.close(context);
+            return EVENTRESULT_FILTER;
         }
     }
 
@@ -418,15 +418,15 @@ module MonitorRoot
         method onActivate(context)
         {
             main::sound.play("ok");
-            MonitorRoot.close(context);
-            return 2;
+            ROOT.close(context);
+            return EVENTRESULT_FILTER;
         }
 
         method onCancel(context)
         {
             main::sound.play("cancel");
-            MonitorRoot.close(context);
-            return 2;
+            ROOT.close(context);
+            return EVENTRESULT_FILTER;
         }
     }
 }

@@ -12,7 +12,7 @@
 
 
 
-module GalleryViewRoot
+module ROOT
 {
     module OPEN_MODE
     {
@@ -84,7 +84,7 @@ module GalleryViewRoot
         var actor = self.Fade;
         actor.forward();
         actor.restart();
-        actor.on_effect_end = (context) => 
+        actor.on_effect_end = function(context) 
         {
             if (actor.on_effect_end == nil)
                 return;
@@ -102,7 +102,7 @@ module GalleryViewRoot
     {
         main::sound.play("cancel");
         self.close(context);
-        return 2;
+        return EVENTRESULT_FILTER;
     }
 
     module SceneFace
@@ -119,7 +119,7 @@ module GalleryViewRoot
 
         method loadCar(context, cp)
         {
-            self.thread_ = Thread(context => 
+            self.thread_ = Thread(function(context)
             {
                 SceneFace.visible = true;
                 SceneFace.x = 1920;
@@ -129,21 +129,21 @@ module GalleryViewRoot
                 var scene_alias = "colorSelect";
                 var is_riding_kart = gtengine::MSpecDB::checkFlag(cp.getCarCode(), gtengine::GenericFlag::IS_RACING_KART);
 
-                if (GalleryViewRoot.open_mode == OPEN_MODE::CAR_DEALER)
+                if (ROOT.open_mode == OPEN_MODE::CAR_DEALER)
                 {
                     if (is_riding_kart)
                         scene_alias = "colorSelect_kart";
                     else
                         scene_alias = "colorSelect";
                 }
-                else if (GalleryViewRoot.open_mode == OPEN_MODE::GARAGE)
+                else if (ROOT.open_mode == OPEN_MODE::GARAGE)
                 {
                     if (is_riding_kart)
                         scene_alias = "blackBG_kart";
                     else
                         scene_alias = "blackBG";
                 }
-                else if (GalleryViewRoot.open_mode == OPEN_MODE::VISION_GT)
+                else if (ROOT.open_mode == OPEN_MODE::VISION_GT)
                 {
                     scene_alias = MENUDB.executeQuery1R1C("SELECT GalleryView FROM t_vision_gt WHERE CarLabel=?", [cp.getCarLabel()]);
                 }
@@ -151,9 +151,9 @@ module GalleryViewRoot
                 SceneFaceUtil::loadScene(SceneFace, scene_alias, cp);
                 SceneFace.current_cp_ = cp;
 
-                while (true)
+                for (;;)
                 {
-                    if (GalleryViewRoot.opacity == 1.0 && !self.isUnderSetup())
+                    if (ROOT.opacity == 1.0 && !self.isUnderSetup())
                         break;
 
                     Thread::Sleep(0.5);

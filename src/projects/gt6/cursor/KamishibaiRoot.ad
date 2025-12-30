@@ -12,7 +12,7 @@
 
 
 
-module KamishibaiRoot
+module ROOT
 {
     static sInfo = nil;
     static sCheckKeyPressThread = nil;
@@ -65,7 +65,7 @@ module KamishibaiRoot
 
         var bgm = sInfo["bgm"];
         if (bgm != nil)
-            SoundUtil::MenuBGMCrossfadeGroup(bgm, 0f, 1f);
+            SoundUtil::MenuBGMCrossfadeGroup(bgm, 0.0, 1.0);
 
         restartActor(Title::Fade, true);
     }
@@ -95,7 +95,7 @@ module KamishibaiRoot
 
         sCheckKeyPressThread = Thread(function ()
         {
-            while (true)
+            for (;;)
             {
                 var state = main::ContextMain.getUpdateContext().getLastPadButtonState(0);
                 if (state & 0x20000)
@@ -105,7 +105,7 @@ module KamishibaiRoot
                     break;
                 }
 
-                Thread::Sleep(0.1f);
+                Thread::Sleep(0.1);
             }
 
 
@@ -118,8 +118,8 @@ module KamishibaiRoot
             sCheckKeyPressThread.start();
             restartActor(Title::Skip::Fade, true);
 
-            var s = 0f;
-            var wait_sec = 3f;
+            var s = 0.0;
+            var wait_sec = 3.0;
 
             while (s < wait_sec)
             {
@@ -129,8 +129,8 @@ module KamishibaiRoot
                     return;
                 }
 
-                Thread::Sleep(0.1f);
-                s += 0.1f;
+                Thread::Sleep(0.1);
+                s += 0.1;
             }
         }
 
@@ -144,7 +144,7 @@ module KamishibaiRoot
                 return;
             }
 
-            Thread::Sleep(0.1f);
+            Thread::Sleep(0.1);
         }
 
         var photo_list = sInfo["list"];
@@ -154,7 +154,7 @@ module KamishibaiRoot
 
         var display_count = 0;
 
-        for (var i = 0; i < photo_list.size; ++i)
+        main_display_loop: for (var i = 0; i < photo_list.size; ++i)
         {
             var photo_info = photo_list[i];
             if (display_count == 0)
@@ -178,7 +178,7 @@ module KamishibaiRoot
                         display_count++;
                 }
 
-                var scale = 1f + (0.04f * display_count);
+                var scale = 1.0 + (0.04 * display_count);
                 fadein_image_w.Zoom.setEndValue(0, [scale, scale]);
                 fadein_image_w.Zoom.total_time = zoom_total_time + fadeout_image_w.Fade.total_time;
                 resetActor(fadein_image_w.Fade, true);
@@ -203,9 +203,9 @@ module KamishibaiRoot
             while (Caption::Fade.ramain_time > 0)
             {
                 if (sSkipKamishibai)
-                    break;
+                    break main_display_loop;
 
-                Thread::Sleep(0.1f);
+                Thread::Sleep(0.1);
             }
 
             display_count--;

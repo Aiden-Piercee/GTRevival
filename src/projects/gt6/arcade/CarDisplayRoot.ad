@@ -12,7 +12,7 @@
 
 
 
-module CarDisplayRoot
+module ROOT
 {
     static sIsDisplay = false;
 
@@ -95,7 +95,7 @@ module CarDisplayRoot
             Display::Info::Flag.on_delay_load_complete = nil;
         };
 
-        Display::Info::Flag.on_delay_load_complete = *self.*mtd_end_load_flag;
+        Display::Info::Flag.on_delay_load_complete = self.*mtd_end_load_flag;
 
         var country_flag = info.CountryFlag != "-" ? info.CountryFlag.downcase() : "pdi";
         Display::Info::Flag.image_path = "piece/flag_ranking/%s.img".format(country_flag);
@@ -113,7 +113,7 @@ module CarDisplayRoot
             Display::Logo.on_delay_load_complete = nil;
         };
 
-        Display::Logo.on_delay_load_complete = *self.*mtd_end_load_logo;
+        Display::Logo.on_delay_load_complete = self.*mtd_end_load_logo;
         Display::Logo.image_path = "piece/gt6/tunner_logo_L/%s.img".format(info.Tuner);
     }
 
@@ -144,14 +144,14 @@ module CarDisplayRoot
 
         method loadCar(context, cp)
         {
-            self.thread_ = Thread((context) => 
+            self.thread_ = Thread(function(context) 
             {
                 SceneCover::Fade.forward();
                 SceneCover::Fade.reset();
                 SceneFaceUtil::loadScene(SceneFace, "arcade_bg", cp);
                 SceneFace.current_cp_ = cp;
 
-                while (true)
+                for (;;)
                 {
                     if (!self.isUnderSetup())
                         break;
@@ -186,9 +186,10 @@ module CarDisplayRoot
                 context.wait(0.1);
 
             if (self.current_cp_ != nil)
+            {
                 self.execCommandImmidiate("clearEntity car0");
-
-            self.current_cp_ = nil;
+                self.current_cp_ = nil;
+            }
         }
     }
 }

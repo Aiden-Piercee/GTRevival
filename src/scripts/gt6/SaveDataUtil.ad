@@ -314,7 +314,7 @@ module SaveDataUtil
         if (success)
         {
             main::sound.play("ok");
-            context.wait(0.5f);
+            context.wait(0.5);
             skip = true;
         }
 
@@ -323,7 +323,7 @@ module SaveDataUtil
 
     function _autoSave(context, args)
     {
-        var [project, data, use_tsm] = args;
+        |var project, var data, var use_tsm| = args;
         var success = _save(context, project, data, use_tsm);
         return [success, _autoSaveGameCallback];
     }
@@ -448,6 +448,7 @@ module SaveDataUtil
                 sLoadResult = [result, nil, false, false];
                 success = true;
                 break;
+                break; // Double, probably commented out case
 
             case main::pdiext::SaveDataUtilError::SAVEDATAUTIL_NO_DIRNAME:
             case main::pdiext::SaveDataUtilError::SAVEDATAUTIL_NO_FILENAME:
@@ -465,7 +466,7 @@ module SaveDataUtil
         if (success)
         {
             main::sound.play("ok");
-            context.wait(0.5f);
+            context.wait(0.5);
             skip = true;
         }
 
@@ -474,7 +475,7 @@ module SaveDataUtil
 
     function _autoLoad(context, args)
     {
-        var [data] = args;
+        |var data| = args;
         var success = _load(context, data);
 
         return [success, _autoLoadGameCallback];
@@ -556,9 +557,9 @@ module SaveDataUtil
 
             case main::pdiext::SaveDataUtilError::SAVEDATAUTIL_FATAL_ERROR:
                 var project = context.getCursorProject();
-                DialogUtil::openConfirmDialog(context, DialogUtil::ERROR
+                DialogUtil::openConfirmDialog(context, DialogUtil::ERROR,
                     manager.translate("SaveData", "LOADED_DATA_WAS_WRONG"));
-                DialogUtil::openConfirmDialog(context, DialogUtil::ERROR
+                DialogUtil::openConfirmDialog(context, DialogUtil::ERROR,
                     manager.translate("SaveData", "LOAD_NOT_DONE"));
                 sLoadResult = [result, true, false];
                 sLoadResult = [result, true, true]; // Don't ask
@@ -568,9 +569,9 @@ module SaveDataUtil
             case main::pdiext::SaveDataUtilError::SAVEDATAUTIL_FAILED_MALLOC:
             case main::pdiext::SaveDataUtilError::SAVEDATAUTIL_NO_ENOUGH_BUFFER_TO_LOAD:
                 var project = context.getCursorProject();
-                DialogUtil::openConfirmDialog(context, DialogUtil::ERROR
+                DialogUtil::openConfirmDialog(context, DialogUtil::ERROR,
                     manager.translate("SaveData", "LOADED_DATA_WAS_WRONG"));
-                DialogUtil::openConfirmDialog(context, DialogUtil::ERROR
+                DialogUtil::openConfirmDialog(context, DialogUtil::ERROR,
                     manager.translate("SaveData", "LOAD_NOT_DONE"));
                 sLoadResult = [result, true, false];
                 sLoadResult = [result, false, true];
@@ -578,7 +579,7 @@ module SaveDataUtil
 
             case main::pdiext::SaveDataUtilError::SAVEDATAUTIL_BIND_ERROR:
                 var project = context.getCursorProject();
-                DialogUtil::openConfirmDialog(context, DialogUtil::ERROR
+                DialogUtil::openConfirmDialog(context, DialogUtil::ERROR,
                     manager.translate("SaveData", "ERROR_LOAD_BINDCHECK"));
                 sLoadResult = [result, true, false];
                 break;
@@ -595,12 +596,12 @@ module SaveDataUtil
 
             default:
                 var project = context.getCursorProject();
-                var res = DialogUtil::openConfirmDialog(context, DialogUtil::YESNO
+                var res = DialogUtil::openConfirmDialog(context, DialogUtil::YESNO,
                     manager.translate("SaveData", "CORRUPTED_DO_YOU_RETRY_TO_LOAD"));
 
                 if (!res)
                 {
-                    DialogUtil::openConfirmDialog(context, DialogUtil::ERROR
+                    DialogUtil::openConfirmDialog(context, DialogUtil::ERROR,
                         manager.translate("SaveData", "LOAD_NOT_DONE"));
                     sLoadResult = [result, true, true];
                 }
@@ -740,7 +741,7 @@ module SaveDataUtil
                     DialogUtil::openConfirmDialog(context, DialogUtil::ERROR, 
                         manager.translate("SaveData", "ERROR_SAVE_OTHER"));
 
-                    res = DialogUtil::openConfirmDialog(context, 1, 
+                    res = DialogUtil::openConfirmDialog(context, DIALOG_QUERY, 
                         manager.translate("SaveData", "DO_YOU_RETRY_TO_SAVE"));
 
                     if (!res)
@@ -790,7 +791,7 @@ module SaveDataUtil
     }
 }
 
-static module main
+module ::main
 {
     function onOpenSaveDataErrorDialog(args)
     {
@@ -798,7 +799,7 @@ static module main
             Thread::Sleep(1);
 
         var scb = main::SaveCallback;
-        var [message] = args;
+        |var message| = args;
 
         pdistd::MSystemDialog::open("NN", message);
         scb.finishUiProcess(0);
@@ -810,7 +811,7 @@ static module main
             Thread::Sleep(1);
 
         var scb = main::SaveCallback;
-        var [message] = args;
+        |var message| = args;
 
         var res = pdistd::MSystemDialog::open("NY", message);
         var result = 0;
@@ -827,7 +828,7 @@ static module main
         Thread::Sleep(1);
 
         var scb = main::SaveCallback;
-        var [message] = args;
+        |var message| = args;
 
         pdistd::MSystemDialog::open("ENYD", message);
         scb.finishUiProcess(0);

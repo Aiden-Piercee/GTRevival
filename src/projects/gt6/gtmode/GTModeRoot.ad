@@ -12,7 +12,7 @@
 
 
 
-module GTModeRoot
+module ROOT
 {
     #include "TopNews.ad"
 
@@ -119,15 +119,15 @@ module GTModeRoot
             [
                 "check_begin" : "get_first_car",
                 "progress" : "get_first_car",
-                "exec_func" : (context, args) =>
+                "exec_func" : function(context, args)
                 {
-                    GTModeRoot.setFocusGroupItem("Cars_Area", "Cars_Dealer", true);
+                    ROOT.setFocusGroupItem("Cars_Area", "Cars_Dealer", true);
                     context.pageInRootTransition();
-                    var target = GTModeRoot.getGroupItemWidget("Cars_Area", "Cars_Dealer");
+                    var target = ROOT.getGroupItemWidget("Cars_Area", "Cars_Dealer");
                     TutorialUtil::message(context, "get_first_car", 
-                       ["open_wait_sec" : 2f, 
+                       ["open_wait_sec" : 2.0, 
                         "target" : target.WhiteBlink,
-                        "build_text" : GTModeProject.getGTModeFirstCarName()]);
+                        "build_text" : PROJECT.getGTModeFirstCarName()]);
                 },
             ],
 
@@ -136,8 +136,8 @@ module GTModeRoot
                 "check_begin" : "got_first_car",
                 "message" : "got_first_car",
                 "msg_param" : [
-                    "open_wait_sec" : 1f,
-                    "build_text" : [GTModeProject.getGTModeFirstCarName(), GTModeProject.getGTModeFirstCarPP()],
+                    "open_wait_sec" : 1.0,
+                    "build_text" : [PROJECT.getGTModeFirstCarName(), PROJECT.getGTModeFirstCarPP()],
                 ],
                 "done" : "got_first_car",
                 "begin" : "goto_novice",
@@ -148,11 +148,11 @@ module GTModeRoot
                 "check_begin" : "goto_novice",
                 "progress" : "goto_novice",
                 "begin" : "after_first_race_normal",
-                "exec_func" : (context, args) => 
+                "exec_func" : function(context, args)
                 {
-                    GTModeRoot.setFocusGroupItem("Career_Area", "Career_N");
-                    context.wait(1f);
-                    var target = GTModeRoot.getGroupItemWidget("Career_Area", "Career_N");
+                    ROOT.setFocusGroupItem("Career_Area", "Career_N");
+                    context.wait(1.0);
+                    var target = ROOT.getGroupItemWidget("Career_Area", "Career_N");
                     TutorialUtil::message(context, "goto_novice", ["target" : target.WhiteBlink]);
                 }
             ],
@@ -163,17 +163,17 @@ module GTModeRoot
                 "progress" : "goto_b",
                 "done" : "goto_only_x",
                 "message" : "goto_b",
-                "msg_param" : ["open_wait_sec" : 1f],
+                "msg_param" : ["open_wait_sec" : 1.0],
             ],
 
             // Go to A
             [
                 "check_begin" : "goto_a",
                 "progress" : "goto_a",
-                "exec_func" : (context, args) => 
+                "exec_func" : function(context, args)
                 {
                     if (!GAME_STATUS.user_profile.option.invalid_moon)
-                        TutorialUtil::message(context, "goto_a", ["open_wait_sec" : 1f]);
+                        TutorialUtil::message(context, "goto_a", ["open_wait_sec" : 1.0]);
                 },
             ],
 
@@ -183,7 +183,7 @@ module GTModeRoot
                 "progress" : "goto_ib",
                 "message" : "goto_ib",
                 "begin" : "x2014_welcome",
-                "msg_param" : ["open_wait_sec" : 1f],
+                "msg_param" : ["open_wait_sec" : 1.0],
             ],
 
             // x2014 unlocked
@@ -191,11 +191,11 @@ module GTModeRoot
                 "check_begin" : "goto_only_x",
                 "progress" : "goto_only_x",
                 "begin" : "x2014_welcome",
-                "exec_func" : (context, args) => 
+                "exec_func" : function(context, args)
                 {
-                    GTModeRoot.setFocusGroupItem("Career_Area", "Career_Fomula");
-                    context.wait(1.5f);
-                    var target = GTModeRoot.getGroupItemWidget("Career_Area", "Career_Fomula");
+                    ROOT.setFocusGroupItem("Career_Area", "Career_Fomula");
+                    context.wait(1.5);
+                    var target = ROOT.getGroupItemWidget("Career_Area", "Career_Fomula");
                     target.active = true;
                     target.New.visible = true;
                     TutorialUtil::message(context, "goto_only_x", ["target" : target.WhiteBlink]);
@@ -207,26 +207,26 @@ module GTModeRoot
                 "check_begin" : "goto_ia",
                 "progress" : "goto_ia",
                 "message" : "goto_ia",
-                "msg_param" : ["open_wait_sec" : 1f],
+                "msg_param" : ["open_wait_sec" : 1.0],
             ],
             [
                 "check_begin" : "goto_s",
                 "progress" : "goto_s",
                 "message" : "goto_s",
-                "msg_param" : ["open_wait_sec" : 1f],
+                "msg_param" : ["open_wait_sec" : 1.0],
             ],
 
             // Goodwood unlocked
             [
                 "check_begin" : "open_goodwood_0",
                 "progress" : "open_goodwood_0",
-                "exec_func" : (context, args) => 
+                "exec_func" : function(context, args) 
                 {
-                    context.wait(1f);
+                    context.wait(1.0);
                     GoodWoodWelcomeRoot.open(context, 0);
-                    GTModeRoot.setFocusGroupItem("Special_Area", "Special_Goodwood");
-                    context.wait(1.5f);
-                    var target = GTModeRoot.getGroupItemWidget("Special_Area", "Special_Goodwood");
+                    ROOT.setFocusGroupItem("Special_Area", "Special_Goodwood");
+                    context.wait(1.5);
+                    var target = ROOT.getGroupItemWidget("Special_Area", "Special_Goodwood");
                     target.active = true;
                     target.New.visible = true;
                     TutorialUtil::message(context, "open_goodwood_0", ["target" : target.WhiteBlink]);
@@ -235,44 +235,44 @@ module GTModeRoot
             [
                 "check_begin" : "open_goodwood_1",
                 "progress" : "open_goodwood_1",
-                "exec_func" : (context, args) => 
+                "exec_func" : function(context, args)
                 {
-                    context.wait(1f);
+                    context.wait(1.0);
                     GoodWoodWelcomeRoot.open(context, 1);
-                    var target = GTModeRoot.getGroupItemWidget("Special_Area", "Special_Goodwood");
+                    var target = ROOT.getGroupItemWidget("Special_Area", "Special_Goodwood");
                     target.New.visible = true;
                 }
             ],
             [
                 "check_begin" : "open_goodwood_2",
                 "progress" : "open_goodwood_2",
-                "exec_func" : (context, args) => 
+                "exec_func" : function(context, args)
                 {
-                    context.wait(1f);
+                    context.wait(1.0);
                     GoodWoodWelcomeRoot.open(context, 2);
-                    var target = GTModeRoot.getGroupItemWidget("Special_Area", "Special_Goodwood");
+                    var target = ROOT.getGroupItemWidget("Special_Area", "Special_Goodwood");
                     target.New.visible = true;
                 }
             ],
             [
                 "check_begin" : "open_goodwood_3",
                 "progress" : "open_goodwood_3",
-                "exec_func" : (context, args) => 
+                "exec_func" : function(context, args)
                 {
-                    context.wait(1f);
+                    context.wait(1.0);
                     GoodWoodWelcomeRoot.open(context, 3);
-                    var target = GTModeRoot.getGroupItemWidget("Special_Area", "Special_Goodwood");
+                    var target = ROOT.getGroupItemWidget("Special_Area", "Special_Goodwood");
                     target.New.visible = true;
                 }
             ],
             [
                 "check_begin" : "open_goodwood_4",
                 "progress" : "open_goodwood_4",
-                "exec_func" : (context, args) => 
+                "exec_func" : function(context, args)
                 {
-                    context.wait(1f);
+                    context.wait(1.0);
                     GoodWoodWelcomeRoot.open(context, 4);
-                    var target = GTModeRoot.getGroupItemWidget("Special_Area", "Special_Goodwood");
+                    var target = ROOT.getGroupItemWidget("Special_Area", "Special_Goodwood");
                     target.New.visible = true;
                 }
             ],
@@ -296,11 +296,11 @@ module GTModeRoot
         if (AppOpt.defined("skip_present"))
             return;
 
-        var checked = GTModeProject.history['GTModeRoot::CheckUserSpecial'];
+        var checked = PROJECT.history['GTModeRoot::CheckUserSpecial'];
         if (checked)
             return;
 
-        GTModeProject.history['GTModeRoot::CheckUserSpecial'] = true;
+            PROJECT.history['GTModeRoot::CheckUserSpecial'] = true;
 
         var need_check = false;
         var category = "special_present";
@@ -323,7 +323,7 @@ module GTModeRoot
 
         var type = 3;
 
-        var request = UserProfile2.requestUserSpecialList(type, (args) => { });
+        var request = UserProfile2.requestUserSpecialList(type, function(args) { });
         if (Grim2Util::join(context, request, true))
         {
             var user_special_list = UserProfile2.decodeUserSpecialList(request);
@@ -346,7 +346,7 @@ module GTModeRoot
                 if (GAME_STATUS.user_profile.garage.isFull())
                 {
                     showGarageFullAtPresentCar(context);
-                    GTModeProject.history['GTModeRoot::CheckUserSpecial'] = false;
+                    PROJECT.history['GTModeRoot::CheckUserSpecial'] = false;
                     break;
                 }
 
@@ -375,7 +375,7 @@ module GTModeRoot
             [total >= 125 && TutorialUtil::isDone("gttop", "open_goodwood_3"), "open_goodwood_4"],
         ];
 
-        foreach (var [condition, key] in array)
+        foreach (|var condition, var key| in array)
         {
             if (condition)
                 TutorialUtil::begin("gttop", key);
@@ -412,7 +412,7 @@ module GTModeRoot
 
             if (attribute_map != nil)
             {
-                foreach (var [key, value] in attribute_map)
+                foreach (|var key, var value| in attribute_map)
                     self[key] = value;
             }
         }
@@ -454,7 +454,7 @@ module GTModeRoot
 
             if (attribute_map != nil)
             {
-                foreach (var [key, value] in attribute_map)
+                foreach (|var key, var value| in attribute_map)
                 {
                     self[key] = value;
                 }
@@ -523,12 +523,12 @@ module GTModeRoot
 
             if (data.init_callback != nil)
                 data.init_callback(context, self);
-            return STATE_EXIT;
+            return EVENTRESULT_CONTINUE;
         }
 
         method enterFocus(context)
         {
-            GTModeRoot.setFocus(self.Box.first);
+            ROOT.setFocus(self.Box.first);
         }
 
         method getItem(num)
@@ -539,7 +539,7 @@ module GTModeRoot
         method onKeyPress(context, event)
         {
             if (LeaveDetectUtil::activated(context, event))
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
 
              switch (event.keysym)
              {
@@ -551,7 +551,7 @@ module GTModeRoot
                          HScrollPointer.setPointer(self.data.index);
                      }
 
-                     return STATE_YIELD;
+                     return EVENTRESULT_FILTER;
 
                 case CELL_PAD_CTRL_R1:
                     if (self.next != nil)
@@ -561,10 +561,10 @@ module GTModeRoot
                         HScrollPointer.setPointer(self.data.index);
                     }
 
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
              }
 
-             return STATE_EXIT;
+             return EVENTRESULT_CONTINUE;
         }
     }
 
@@ -575,7 +575,7 @@ module GTModeRoot
         method onFocusEnter(context)
         {
             ScrolledWindow::clip::space::IconGroupBase.setTarget(self.x + self.Box.x, self.Box.w, self.Box.h, true);
-            return 1;
+            return EVENTRESULT_STOP;
         }
     }
 
@@ -586,7 +586,7 @@ module GTModeRoot
         method init(context, data)
         {
             self.data = data;
-            self.Name::label.text = context.translate(GTModeRoot, data.label != nil ? data.label.toString() : "");
+            self.Name::label.text = context.translate(ROOT, data.label != nil ? data.label.toString() : "");
 
             foreach (var item in data.items)
             {
@@ -601,13 +601,13 @@ module GTModeRoot
                 data.init_callback(context, self);
 
             self.Box.column = data.items_column;
-            return STATE_EXIT;
+            return EVENTRESULT_CONTINUE;
         }
 
         method onFocusEnter(context)
         {
             ScrolledWindow::clip::space::IconGroupBase.setTarget(self.x + self.Box.x, self.Box.w, self.Box.h, false);
-            return 1;
+            return EVENTRESULT_STOP;
         }
 
         module Poster
@@ -637,7 +637,7 @@ module GTModeRoot
 
                 for (var i = 0; i < car_list.size; i++)
                 {
-                    var dot = GTModeRoot::Template::Dot.doCopy();
+                    var dot = ROOT::Template::Dot.doCopy();
                     dot.active = false;
                     self.SBox::HBox.appendChild(context, dot);
                 }
@@ -663,7 +663,7 @@ module GTModeRoot
 
                 var img = self.ImageFace;
                 img.on_delay_load_complete = nil;
-                img.FadeActor.on_effect_end = *self.*effect_end;
+                img.FadeActor.on_effect_end = self.*effect_end;
                 img.FadeActor.start();
                 self.Manufacturer.FadeActor.start();
             }
@@ -686,7 +686,7 @@ module GTModeRoot
                 var img = self.ImageFace;
                 img.FadeActor.reset();
                 
-                img.on_delay_load_complete = *self.*load_complete;
+                img.on_delay_load_complete = self.*load_complete;
                 img.image_path = "piece/gt6/home/advertise/%s.img".format(car_label);
 
                 if (self.active_dot != nil)
@@ -717,7 +717,7 @@ module GTModeRoot
         method init(context, data)
         {
             self.data = data;
-            self.Name::label.text = context.translate(GTModeRoot, data.label != nil ? data.label.toString() : "");
+            self.Name::label.text = context.translate(ROOT, data.label != nil ? data.label.toString() : "");
 
             foreach (var item in data.items)
             {
@@ -733,7 +733,7 @@ module GTModeRoot
 
             self.Box.column = data.items_column;
             ScrolledWindow::clip::space::IconGroupBase.visible = false;
-            return STATE_EXIT;
+            return EVENTRESULT_CONTINUE;
         }
     }
 
@@ -749,7 +749,7 @@ module GTModeRoot
                 item.icon.image_path = "piece/gt6/home/%{image}.img";
             }, context, self, data.image));
 
-            self.label.text = context.translate(GTModeRoot, data.label != nil ? data.label.toString() : "");
+            self.label.text = context.translate(ROOT, data.label != nil ? data.label.toString() : "");
             if (self.defined("label_i"))
                 self.label_i.text = self.label.text;
 
@@ -762,12 +762,12 @@ module GTModeRoot
 
         method onActivate(context)
         {
-            if (GTModeRoot.ignore_on_activate)
-                return STATE_EXIT;
+            if (ROOT.ignore_on_activate)
+                return EVENTRESULT_CONTINUE;
 
-            GTModeRoot.saveLastFocus(self);
+            ROOT.saveLastFocus(self);
 
-            var res = STATE_EXIT;
+            var res = EVENTRESULT_CONTINUE;
             if (self.data.active_callback != nil)
             {
                 LeaveDetectUtil::suspend(context);
@@ -787,7 +787,7 @@ module GTModeRoot
 
             var group_w = self.data.group_widget;
             HScrollPointer.setPointer(group_w.data.index);
-            return 0;
+            return EVENTRESULT_CONTINUE;
         }
 
         method onFocusLeave(context)
@@ -797,7 +797,7 @@ module GTModeRoot
                 return data.focus_leave_callback(context, self);
             }
 
-            return 0;
+            return EVENTRESULT_CONTINUE;
         }
     }
 
@@ -852,12 +852,12 @@ module GTModeRoot
 
         method chaseTarget(context)
         {
-            while (true)
+            for (;;)
             {
                 if (self.chase_target != nil)
                     self.ChaseActor.target_x = self.chase_target;
 
-                Thread::Sleep(0.05f);
+                Thread::Sleep(0.05);
             }
         }
 
@@ -888,7 +888,7 @@ module GTModeRoot
             [
                 // Attributes to define
                 'template_widget' : Template::Menu,
-                'init_callback' : (context, item) => 
+                'init_callback' : function(context, item)
                 {
                     item.New.visible = GAME_STATUS.user_profile.context.garage_new_mark;
                 },
@@ -909,7 +909,7 @@ module GTModeRoot
                     if (TutorialUtil::isBegin("gttop", "buy_car"))
                         context.finish(true);
 
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 },
             ]
         );
@@ -920,7 +920,7 @@ module GTModeRoot
             [
                 // Attributes to define
                 'template_widget' : Template::Menu,
-                'init_callback' : (context, item) => {},
+                'init_callback' : function(context, item) {},
 
                 'active_callback' : function(context, item)
                 {
@@ -929,23 +929,24 @@ module GTModeRoot
                     ReplayListRoot.open(context, ReplayListRoot::MODE::ALL);
                     LeaveDetectUtil::resume(context);
 
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 },
             ]
         );
 
-        static menuMessage = ItemData(
+        // "Top-level" variable
+        var menuMessage = ItemData(
             "Home_Message", // Label
             "message", // Image
             [
                 // Attributes to define
                 'template_widget' : Template::Menu,
-                'init_callback' : (context, item) => 
+                'init_callback' : function(context, item)
                 {
                     var max_mail_id = GAME_STATUS.user_profile.mail.getMaxMailId();
                     GTMail.requestAllMailList(max_mail_id, function (args)
                     {
-                        var [context, request] = args;
+                        |var context, var request| = args;
                         var count = 0;
 
                         if (request.isDone())
@@ -963,8 +964,8 @@ module GTModeRoot
                 'active_callback' : function(context, item) 
                 {
                     sound.play("ok");
-                    if (!GTModeRoot::checkOnlineFeatureAvailable(context, false))
-                        return STATE_YIELD;
+                    if (!ROOT::checkOnlineFeatureAvailable(context, false))
+                        return EVENTRESULT_FILTER;
 
                     if (PDINetwork.isChatRestricted())
                     {
@@ -972,7 +973,7 @@ module GTModeRoot
                         DialogUtil::openConfirmDialog(context, DialogUtil::ERROR,
                             manager.translate("Community", "ERROR_CHAT_RESTRICTED"));
                         LeaveDetectUtil::resume(context);
-                        return STATE_YIELD;
+                        return EVENTRESULT_FILTER;
                     }
 
                     sProjectHolder.load("community", "community");
@@ -986,25 +987,26 @@ module GTModeRoot
                     unloadCommunity(context);
                     CursorProject::StartMenuRoot::StartMenu.appear();
 
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 },
             ]
         );
 
-        static menuNews = ItemData(
+        // "Top-level" variable
+        var menuNews = ItemData(
             "Home_News", // Label
             "news", // Image
             [
                 // Attributes to define
                 'template_widget' : Template::Menu,
-                'init_callback' : (context, item) => 
+                'init_callback' : function(context, item)
                 {
                     var category_id1 = 1;
                     foreach (var category_id2 in [1, 2])
                     {
                         News2.requestNewsIdList(category_id1, category_id2, function (args)
                         {
-                            var [context, request] = args;
+                            |var context, var request| = args;
                             if (request.isDone())
                             {
                                 var news_id_list = News2.decodeNewsIdList(request);
@@ -1023,8 +1025,8 @@ module GTModeRoot
                 'active_callback' : function(context, item) 
                 {
                     sound.play("ok");
-                    if (!GTModeRoot::checkOnlineFeatureAvailable(context, false))
-                        return STATE_YIELD;
+                    if (!ROOT::checkOnlineFeatureAvailable(context, false))
+                        return EVENTRESULT_FILTER;
 
                     sProjectHolder.load("community", "community");
                     CursorProject::StartMenuRoot::StartMenu.hide();
@@ -1037,7 +1039,7 @@ module GTModeRoot
                     unloadCommunity(context);
                     CursorProject::StartMenuRoot::StartMenu.appear();
 
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 },
             ]
         );
@@ -1048,7 +1050,7 @@ module GTModeRoot
             [
                 // Attributes to define
                 'template_widget' : Template::Menu,
-                'init_callback' : (context, item) => {},
+                'init_callback' : function(context, item) {},
 
                 'active_callback' : function(context, item)
                 {
@@ -1057,7 +1059,7 @@ module GTModeRoot
                     Status2Root.open(context);
                     LeaveDetectUtil::resume(context);
 
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 },
             ]
         );
@@ -1068,20 +1070,20 @@ module GTModeRoot
             [
                 // Attributes to define
                 'template_widget' : Template::Menu,
-                'init_callback' : (context, item) => {},
+                'init_callback' : function(context, item) {},
 
                 'active_callback' : function(context, item) 
                 {
                     sound.play("ok");
-                    if (!GTModeRoot::checkOnlineFeatureAvailable(context, false))
-                        return STATE_YIELD;
+                    if (!ROOT::checkOnlineFeatureAvailable(context, false))
+                        return EVENTRESULT_FILTER;
 
                     LeaveDetectUtil::suspend(context);
                     DLCRoot.open(context);
                     CursorProject::StartMenuRoot::StartMenu.reflectCurrentStatus(context);
                     LeaveDetectUtil::resume(context);
 
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 },
             ]
         );
@@ -1103,11 +1105,12 @@ module GTModeRoot
     // Online Menu
     module Online
     {
-        static iconCommunity = ItemData("Online_Community", "community", 
+        // "Top-level" variable
+        var iconCommunity = ItemData("Online_Community", "community", 
         [
             // Attributes to define
             'template_widget' : Template::IconS,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 // Only show if get_first_car tutorial is done
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
@@ -1132,17 +1135,17 @@ module GTModeRoot
                     sound.play("disable");
                     DialogUtil::openConfirmDialog(context, DialogUtil::ERROR,
                         manager.translate("CommonGTMode", "Message_NeedLicenseForCommunity"));
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 }
 
                 if (!checkRidingCar(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
 
                 sound.play("ok");
                 KeyValueUtil::set("new_flag", "community", false);
 
-                if (!GTModeRoot::checkOnlineFeatureAvailable(context, false))
-                    return STATE_YIELD;
+                if (!ROOT::checkOnlineFeatureAvailable(context, false))
+                    return EVENTRESULT_FILTER;
                 
                 if (PDINetwork.isChatRestricted())
                 {
@@ -1154,15 +1157,15 @@ module GTModeRoot
                 sProjectHolder.load("event_setting", "event_setting");
 
                 CommunityProject::CommunityRoot.open(context);
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
-        static iconOpenLobby = ItemData("Online_OpenLobby", "openlobby",
+        var iconOpenLobby = ItemData("Online_OpenLobby", "openlobby",
         [
             // Attributes to define
             'template_widget' : Template::IconS,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 // Only show if get_first_car tutorial is done
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
@@ -1185,43 +1188,43 @@ module GTModeRoot
                 if (!item.active)
                 {
                     sound.play("disable");
-                    var label_name = manager.translate(GTModeRoot, "Online_OpenLobby");
+                    var label_name = manager.translate(ROOT, "Online_OpenLobby");
                     var need_license_name = manager.translate("CommonGTMode", "LICENSE_A");
 
                     DialogUtil::openConfirmDialog(context, DialogUtil::ERROR,
                         manager.translate("CommonGTMode", "Message_NeedLicense").build(label_name, need_license_name));
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 }
 
                 if (!checkRidingCar(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
 
                 var size = pdistd::GetDiskFreeSize("/APP_DATA");
                 size = size.toLong() - main::REPLAY_MINIMUM_HDD_SPACE;
                 if (size < 0)
                 {
                     pdistd::MSystemDialog::abortDiskFull(main::REPLAY_MINIMUM_HDD_SPACE / 1024, false);
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 }
 
                 sound.play("ok");
                 KeyValueUtil::set("new_flag", "openlobby", false);
 
-                if (!GTModeRoot::checkOnlineFeatureAvailable(context, true))
-                    return STATE_YIELD;
+                if (!ROOT::checkOnlineFeatureAvailable(context, true))
+                    return EVENTRESULT_FILTER;
                 
                 sProjectHolder.load("event_setting", "event_setting");
                 RoomRoot.open(context);
 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
-        static iconQuickMatch = ItemData("Online_QuickMatch", "quickmatch",
+        var iconQuickMatch = ItemData("Online_QuickMatch", "quickmatch",
         [
             // Attributes to define
             'template_widget' : Template::IconS,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 // Only show if get_first_car tutorial is done
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
@@ -1244,30 +1247,30 @@ module GTModeRoot
                 if (!item.active)
                 {
                     sound.play("disable");
-                    var label_name = manager.translate(GTModeRoot, "Online_QuickMatch");
+                    var label_name = manager.translate(ROOT, "Online_QuickMatch");
                     var need_license_name = manager.translate("CommonGTMode", "LICENSE_A");
 
                     var text = manager.translate("CommonGTMode", "Message_NeedLicense")
                                     .build(label_name, need_license_name);
 
                     DialogUtil::openConfirmDialog(context, DialogUtil::ERROR, text);
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 }
 
                 if (!checkRidingCar(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
 
                 sound.play("ok");
                 KeyValueUtil::set("new_flag", "quickmatch", false);
 
-                if (GTModeRoot.quick_match_version != nil)
-                    KeyValueUtil::set("online_event", "quick_match_version", GTModeRoot.quick_match_version);
+                if (ROOT.quick_match_version != nil)
+                    KeyValueUtil::set("online_event", "quick_match_version", ROOT.quick_match_version);
                 
-                if (!GTModeRoot::checkOnlineFeatureAvailable(context, false))
-                    return STATE_YIELD;
+                if (!ROOT::checkOnlineFeatureAvailable(context, false))
+                    return EVENTRESULT_FILTER;
                 
                 if (!checkQuickMatchAvailable(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 
                 if (PDINetwork.isChatRestricted())
                 {
@@ -1277,7 +1280,7 @@ module GTModeRoot
 
                 QuickMatchRoot.open(context);
                 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
@@ -1287,7 +1290,7 @@ module GTModeRoot
         [
             // Attributes to define
             'template_widget' : Template::IconS,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 // Only show if get_first_car tutorial is done
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
@@ -1303,26 +1306,26 @@ module GTModeRoot
                     sound.play("disable");
                     DialogUtil::openConfirmDialog(context, DialogUtil::ERROR,
                         manager.translate("CommonGTMode", "Message_NeedLicenseForOnline"));
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 }
 
                 if (!checkRidingCar(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
 
                 sound.play("disable");
 
-                if (!GTModeRoot::checkOnlineFeatureAvailable(context, true))
-                    return STATE_YIELD;
+                if (!ROOT::checkOnlineFeatureAvailable(context, true))
+                    return EVENTRESULT_FILTER;
                 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
-        static iconSeasonalEvent = ItemData("Online_SeasonalEvent", "seasonal", // Image
+        var iconSeasonalEvent = ItemData("Online_SeasonalEvent", "seasonal", // Image
         [
             // Attributes to define
             'template_widget' : Template::IconS,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 // Only show if get_first_car tutorial is done
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
@@ -1345,30 +1348,30 @@ module GTModeRoot
                 if (!item.active)
                 {
                     sound.play("disable");
-                    var label_name = manager.translate(GTModeRoot, "Online_SeasonalEvent");
+                    var label_name = manager.translate(ROOT, "Online_SeasonalEvent");
                     var need_license_name = manager.translate("CommonGTMode", "LICENSE_B");
 
                     DialogUtil::openConfirmDialog(context, DialogUtil::ERROR,
                         manager.translate("CommonGTMode", "Message_NeedLicense").build(label_name, need_license_name));
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 }
 
                 if (!checkRidingCar(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
 
                 sound.play("ok");
 
-                if (!GTModeRoot::checkOnlineFeatureAvailable(context, false))
-                    return STATE_YIELD;
+                if (!ROOT::checkOnlineFeatureAvailable(context, false))
+                    return EVENTRESULT_FILTER;
 
                 KeyValueUtil::set("new_flag", "seasonal", false);
 
-                if (GTModeRoot.seasonal_version != nil)
-                    KeyValueUtil::set("online_event", "seasonal_version", GTModeRoot.seasonal_version);
+                if (ROOT.seasonal_version != nil)
+                    KeyValueUtil::set("online_event", "seasonal_version", ROOT.seasonal_version);
 
                 SeasonalEventsRoot.open(context);
                 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
@@ -1390,7 +1393,7 @@ module GTModeRoot
         [
             // Attributes to define
             'template_widget' : Template::IconF,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 // Only show if get_first_car tutorial is done
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
@@ -1401,7 +1404,7 @@ module GTModeRoot
                 sound.play("ok");
                 main::GameSequence::setArgumentObject(["is_single_play" : true]);
                 SequenceUtil::startProjectSimple(context, "arcade", "gtmode");
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
@@ -1409,7 +1412,7 @@ module GTModeRoot
         [
             // Attributes to define
             'template_widget' : Template::IconF,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 // Only show if get_first_car tutorial is done
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
@@ -1421,7 +1424,7 @@ module GTModeRoot
                 main::GameSequence::setArgumentObject(["is_single_play" : false,
                                                        "fixed_game_mode" : gtengine::GameMode::SPLIT_BATTLE]);
                 SequenceUtil::startProjectSimple(context, "arcade", "gtmode");
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
@@ -1438,7 +1441,7 @@ module GTModeRoot
         [
             // Attributes to define
             'template_widget' : Template::IconF,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 // Only show if get_first_car tutorial is done
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
@@ -1447,11 +1450,11 @@ module GTModeRoot
             'active_callback' : function(context, item)
             {
                 if (!checkRidingCar(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
 
                 sound.play("ok");
                 CareerModeRoot.open(context, CareerModeUtil::CATEGORY::N);
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
@@ -1459,7 +1462,7 @@ module GTModeRoot
         [
             // Attributes to define
             'template_widget' : Template::IconF,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 // Only show if get_first_car tutorial is done
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
@@ -1472,15 +1475,15 @@ module GTModeRoot
                 if (!item.active)
                 {
                     sound.play("disable");
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 }
 
                 if (!checkRidingCar(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
 
                 sound.play("ok");
                 CareerModeRoot.open(context, CareerModeUtil::CATEGORY::B);
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
@@ -1488,7 +1491,7 @@ module GTModeRoot
         [
             // Attributes to define
             'template_widget' : Template::IconF,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 // Only show if get_first_car tutorial is done
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
@@ -1501,15 +1504,15 @@ module GTModeRoot
                 if (!item.active)
                 {
                     sound.play("disable");
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 }
 
                 if (!checkRidingCar(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
 
                 sound.play("ok");
                 CareerModeRoot.open(context, CareerModeUtil::CATEGORY::A);
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
@@ -1517,7 +1520,7 @@ module GTModeRoot
         [
             // Attributes to define
             'template_widget' : Template::IconF,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 // Only show if get_first_car tutorial is done
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
@@ -1530,15 +1533,15 @@ module GTModeRoot
                 if (!item.active)
                 {
                     sound.play("disable");
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 }
 
                 if (!checkRidingCar(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
 
                 sound.play("ok");
                 CareerModeRoot.open(context, CareerModeUtil::CATEGORY::IB);
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
@@ -1546,7 +1549,7 @@ module GTModeRoot
         [
             // Attributes to define
             'template_widget' : Template::IconF,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 // Only show if get_first_car tutorial is done
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
@@ -1559,15 +1562,15 @@ module GTModeRoot
                 if (!item.active)
                 {
                     sound.play("disable");
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 }
 
                 if (!checkRidingCar(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
 
                 sound.play("ok");
                 CareerModeRoot.open(context, CareerModeUtil::CATEGORY::IA);
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
@@ -1575,7 +1578,7 @@ module GTModeRoot
         [
             // Attributes to define
             'template_widget' : Template::IconF,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 // Only show if get_first_car tutorial is done
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
@@ -1588,23 +1591,23 @@ module GTModeRoot
                 if (!item.active)
                 {
                     sound.play("disable");
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 }
 
                 if (!checkRidingCar(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
 
                 sound.play("ok");
                 CareerModeRoot.open(context, CareerModeUtil::CATEGORY::S);
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
-        static iconCareerFomula = ItemData("Career_Fomula", "career_formula", // Image
+        var iconCareerFomula = ItemData("Career_Fomula", "career_formula", // Image
         [
             // Attributes to define
             'template_widget' : Template::IconF,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 // Only show if get_first_car tutorial is done
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
@@ -1618,21 +1621,21 @@ module GTModeRoot
                 {
                     sound.play("disable");
 
-                    var label_name = manager.translate(GTModeRoot, "Career_Fomula");
+                    var label_name = manager.translate(ROOT, "Career_Fomula");
                     var need_license_name = manager.translate("CommonGTMode", "LICENSE_IB");
 
                     DialogUtil::openConfirmDialog(context, DialogUtil::ERROR,
                         manager.translate("CommonGTMode", "Message_NeedLicense").build(label_name, need_license_name));
 
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 }
 
                 if (!checkRidingCar(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
 
                 sound.play("ok");
                 XChallengeRoot.open(context);
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
@@ -1650,11 +1653,11 @@ module GTModeRoot
 
     module Cars
     {
-        static iconDealer = ItemData("Cars_Dealer", "car_dealer",
+        var iconDealer = ItemData("Cars_Dealer", "car_dealer",
         [
             // Attributes to define
             'template_widget' : Template::IconW,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 item.insensitive = false;
 
@@ -1677,15 +1680,15 @@ module GTModeRoot
             {
                 sound.play("ok");
                 CarDealerRoot.openCarDealer(context);
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
-        static iconVisionGT = ItemData("Cars_VisionGT", "vision_gt",
+        var iconVisionGT = ItemData("Cars_VisionGT", "vision_gt",
         [
             // Attributes to define
             'template_widget' : Template::IconW,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
 
@@ -1711,15 +1714,15 @@ module GTModeRoot
                 ServerUtil::ResidentLobby::destroyImmediately(context);
                 SequenceUtil::startProjectSimple(context, "vision_gt", "gtmode");
 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
-        static iconFeature = ItemData("Cars_Feature", "car_feature",
+        var iconFeature = ItemData("Cars_Feature", "car_feature",
         [
             // Attributes to define
             'template_widget' : Template::IconW,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
 
@@ -1743,7 +1746,7 @@ module GTModeRoot
                 sound.play("ok");
                 CarDealerRoot.openCategory(context);
 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
@@ -1751,7 +1754,7 @@ module GTModeRoot
         [
             // Attributes to define
             'template_widget' : Template::IconW,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
             },
@@ -1761,7 +1764,7 @@ module GTModeRoot
                 sound.play("ok");
                 CarDealerRoot.openCarSearch(context);
 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
@@ -1774,7 +1777,7 @@ module GTModeRoot
         ],
         [
             'items_column' : 2,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 if (TutorialUtil::isDone("gttop", "get_first_car"))
                 {
@@ -1796,7 +1799,7 @@ module GTModeRoot
         [
             // Attributes to define
             'template_widget' : Template::IconS,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
             },
@@ -1804,26 +1807,26 @@ module GTModeRoot
             'active_callback' : function(context, item)
             {
                 if (!checkRidingCar(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 sound.play("ok");
 
                 sProjectHolder.load("gtauto", "gtauto");
                 GTAutoProject::GTAutoRoot.openTuningPartsShop(context);
 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
-        static iconRacingGear = ItemData("GTAuto_RacingGear", "racing_gear", 
+        var iconRacingGear = ItemData("GTAuto_RacingGear", "racing_gear", 
         [
             // Attributes to define
             'template_widget' : Template::IconS,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
 
                 var list = sNewRacingGears;
-                foreach (var [type, id] in list)
+                foreach (|var type, var id| in list)
                 {
                     var v = "%s_%02d".format(type, id);
                     var flag = KeyValueUtil::getFlag("new_flag", v);
@@ -1841,21 +1844,21 @@ module GTModeRoot
             'active_callback' : function(context, item)
             {
                 if (!checkRidingCar(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 sound.play("ok");
 
                 sProjectHolder.load("gtauto", "gtauto");
                 GTAutoProject::GTAutoRoot.openRacingGearShop(context);
 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
-        static iconCustomParts = ItemData("GTAuto_CustomParts", "custom_parts", // Image
+        var iconCustomParts = ItemData("GTAuto_CustomParts", "custom_parts", // Image
         [
             // Attributes to define
             'template_widget' : Template::IconS,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 var flag = KeyValueUtil::getFlag("new_flag", "parts_meter");
                 if (flag == nil)
@@ -1871,13 +1874,13 @@ module GTModeRoot
             'active_callback' : function(context, item)
             {
                 if (!checkRidingCar(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 sound.play("ok");
 
                 sProjectHolder.load("gtauto", "gtauto");
                 GTAutoProject::GTAutoRoot.openCustomPartsShop(context, "F3");
 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
@@ -1885,7 +1888,7 @@ module GTModeRoot
         [
             // Attributes to define
             'template_widget' : Template::IconS,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
             },
@@ -1893,13 +1896,13 @@ module GTModeRoot
             'active_callback' : function(context, item)
             {
                 if (!checkRidingCar(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 sound.play("ok");
 
                 sProjectHolder.load("gtauto", "gtauto");
                 GTAutoProject::GTAutoRoot.openPaintShop(context);
 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
@@ -1907,7 +1910,7 @@ module GTModeRoot
         [
             // Attributes to define
             'template_widget' : Template::IconS,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
             },
@@ -1915,17 +1918,17 @@ module GTModeRoot
             'active_callback' : function(context, item)
             {
                 if (!checkRidingCar(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 sound.play("ok");
 
                 sProjectHolder.load("gtauto", "gtauto");
                 GTAutoProject::GTAutoRoot.openPitService(context);
 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
-        static Area = GroupData("GTAuto_Area";
+        static Area = GroupData("GTAuto_Area",
         [
             iconTuningParts,
             iconCustomParts,
@@ -1934,18 +1937,18 @@ module GTModeRoot
             iconPaint,
         ],
         [
-            'init_callback' : (context, item) => { item.GTAutoLogo.visible = true }
+            'init_callback' : function(context, item) { item.GTAutoLogo.visible = true; }
         ])
     }
 
     module Special
     {
-        static iconLRV = ItemData("Special_LRV", "lrv", // Image
+        var iconLRV = ItemData("Special_LRV", "lrv", // Image
         [
             // Attributes to define
             'invalid' : GAME_STATUS.user_profile.option.invalid_moon,
             'template_widget' : Template::IconF,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 item.visible = TutorialUtil::isDone("gttop", "complete_career_b");
 
@@ -1964,21 +1967,21 @@ module GTModeRoot
                 if (!item.active)
                 {
                     sound.play("disable");
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 }
 
                 sound.play("ok");
                 LunarExplorationRoot.open(context);
 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
-        static iconGoodwood = ItemData("Special_Goodwood", "goodwood", 
+        var iconGoodwood = ItemData("Special_Goodwood", "goodwood", 
         [
             // Attributes to define
             'template_widget' : Template::IconF,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
                 item.active = TutorialUtil::isProgress("gttop", "open_goodwood_0") || TutorialUtil::isDone("gttop", "open_goodwood_0");
@@ -1999,25 +2002,25 @@ module GTModeRoot
                 if (!item.active)
                 {
                     sound.play("disable");
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 }
 
                 if (!checkRidingCar(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
 
                 sound.play("ok");
                 RaceEventRoot.open(context, CareerModeUtil::CATEGORY::GOODWOOD, "gw_fos");
 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
         static AcademyInfo = nil;
-        static iconAcademy = ItemData("Special_Academy", "academy", 
+        var iconAcademy = ItemData("Special_Academy", "academy", 
         [
             // Attributes to define
             'template_widget' : Template::IconF,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 AcademyInfo = nil;
 
@@ -2039,12 +2042,12 @@ module GTModeRoot
                 if (!item.active)
                 {
                     sound.play("disable");
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 }
 
                 sound.play("ok");
-                if (!GTModeRoot::checkOnlineFeatureAvailable(context, false))
-                    return STATE_YIELD;
+                if (!ROOT::checkOnlineFeatureAvailable(context, false))
+                    return EVENTRESULT_FILTER;
 
                 var country = NP.getRegionName();
                 var languages = NP.getRegionLanguage();
@@ -2053,7 +2056,7 @@ module GTModeRoot
                 if (languages != nil)
                     language = languages[0];
 
-                var request = Grim2.requestAcademy(country, language, args => {});
+                var request = Grim2.requestAcademy(country, language, function(args) {});
                 if (!Grim2Util::joinAwait(context, request))
                 {
                     sound.play("disable");
@@ -2070,15 +2073,15 @@ module GTModeRoot
                 KeyValueUtil::set("new_flag", "academy2015", false);
                 AcademyRoot.open(context, academy);
 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
-        static iconAyrtonSenna = ItemData("Special_AyrtonSenna", "ayrton_senna", 
+        var iconAyrtonSenna = ItemData("Special_AyrtonSenna", "ayrton_senna", 
         [
             // Attributes to define
             'template_widget' : Template::IconF,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 // Only show if get_first_car tutorial is done
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
@@ -2098,26 +2101,26 @@ module GTModeRoot
                 if (!item.active)
                 {
                     sound.play("disable");
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 }
 
                 if (!checkRidingCar(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
 
                 sound.play("ok");
 
                 KeyValueUtil::set("new_flag", "senna", false);
                 SennaRoot.open(context);
                 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
-        static iconSierraSS = ItemData("Special_SierraSS", "sierra_ss", 
+        var iconSierraSS = ItemData("Special_SierraSS", "sierra_ss", 
         [
             // Attributes to define
             'template_widget' : Template::IconF,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 var unlock = KeyValueUtil::isCourseUnlock("andalusia_01", nil);
                 if (unlock == nil)
@@ -2140,18 +2143,18 @@ module GTModeRoot
                 if (!item.active)
                 {
                     sound.play("disable");
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 }
 
                 if (!checkRidingCar(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
 
                 sound.play("ok");
 
                 KeyValueUtil::set("new_flag", "sierra_ss", false);
                 SierraSSRoot.open(context);
                 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
@@ -2169,11 +2172,11 @@ module GTModeRoot
 
     module Tool
     {
-        static iconPhoto = ItemData("Tool_Photo", "photo", 
+        var iconPhoto = ItemData("Tool_Photo", "photo", 
         [
             // Attributes to define
             'template_widget' : Template::IconS,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
                 item.active = TutorialUtil::isDone("gttop", "complete_career_n");
@@ -2193,32 +2196,32 @@ module GTModeRoot
                 if (!item.active)
                 {
                     sound.play("disable");
-                    var label_name = manager.translate(GTModeRoot, "Tool_Photo");
+                    var label_name = manager.translate(ROOT, "Tool_Photo");
                     var need_license_name = manager.translate("CommonGTMode", "LICENSE_B");
 
                     DialogUtil::openConfirmDialog(context, DialogUtil::ERROR,
                         manager.translate("CommonGTMode", "Message_NeedLicense").build(label_name, need_license_name));
 
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 }
 
                 if (!checkRidingCar(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
 
                 sound.play("ok");
 
                 KeyValueUtil::set("new_flag", "photo", false);
                 PhotoLocationRoot.open(context);
                 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
-        static iconGPS = ItemData("Tool_GPS", "gps_replay", 
+        var iconGPS = ItemData("Tool_GPS", "gps_replay", 
         [
             // Attributes to define
             'template_widget' : Template::IconS,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
 
@@ -2248,15 +2251,15 @@ module GTModeRoot
                 KeyValueUtil::set("new_flag", "gps", false);
                 SequenceUtil::startProjectSimple(context, "gps_replay", "gtmode");
                 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
-        static iconDataLogger = ItemData("Tool_DataLogger", "datalogger", 
+        var iconDataLogger = ItemData("Tool_DataLogger", "datalogger", 
         [
             // Attributes to define
             'template_widget' : Template::IconS,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
 
@@ -2275,7 +2278,7 @@ module GTModeRoot
                 if (!item.active)
                 {
                     sound.play("disable");
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 }
 
                 sound.play("ok");
@@ -2283,15 +2286,15 @@ module GTModeRoot
                 KeyValueUtil::set("new_flag", "data_logger", false);
                 SequenceUtil::startProjectSimple(context, "datalogger", "gtmode");
                 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
-        static iconCourseMaker = ItemData("Tool_CourseMaker", "course_maker", 
+        var iconCourseMaker = ItemData("Tool_CourseMaker", "course_maker", 
         [
             // Attributes to define
             'template_widget' : Template::IconS,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 item.insensitive = !TutorialUtil::isDone("gttop", "get_first_car");
 
@@ -2312,7 +2315,7 @@ module GTModeRoot
                 KeyValueUtil::set("new_flag", "coursemaker", false);
                 CourseMakerRoot.open(context);
                 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
@@ -2331,7 +2334,7 @@ module GTModeRoot
 
                 SequenceUtil::startProjectSimple(context, "dev_runviewer", "gtmode");
                 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
@@ -2360,7 +2363,7 @@ module GTModeRoot
                 sound.play("ok");
                 main::GameSequence::setArgumentObject(["is_single_play" : true]);
                 SequenceUtil::startProjectSimple(context, "arcade", "gtmode");
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
@@ -2375,7 +2378,7 @@ module GTModeRoot
                 sProjectHolder.load("event_setting", "event_setting");
                 RoomRoot.open(context);
 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
@@ -2389,7 +2392,7 @@ module GTModeRoot
                 sound.play("ok");
                 SequenceUtil::startProjectSimple(context, "gps_replay", "gtmode");
 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
@@ -2403,7 +2406,7 @@ module GTModeRoot
                 sound.play("ok");
                 LunarExplorationRoot.open(context);
 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             },
         ]);
 
@@ -2417,7 +2420,7 @@ module GTModeRoot
         [
             'template_widget' : Template::DemoGroup,
             'items_column' : 4,
-            'init_callback' : (context, item) => 
+            'init_callback' : function(context, item)
             {
                 item.AvertiseTexture::ImageFace.image_path = "piece/gt6/home/top_demo_gt6.img";
                 item.AvertiseTexture::ImageFace.adjustSize();
@@ -2521,7 +2524,7 @@ module GTModeRoot
         var option = GAME_STATUS.user_profile.option;
 
         if (option.kiosk_mode)
-            tooltip_text = manager.translate(GTModeRoot, "Message_NowOnSale");
+            tooltip_text = manager.translate(ROOT, "Message_NowOnSale");
 
         return tooltip_text;
     }
@@ -2544,9 +2547,9 @@ module GTModeRoot
     method startTimeoutMessage(context)
     {
         resetTooltipText(context);
-        ToolTip::tip.value = context.translate(GTModeRoot, "Message_StartDemoSoon");
+        ToolTip::tip.value = context.translate(ROOT, "Message_StartDemoSoon");
         context.addTimeOut("autodemo_countdown", startAutoDemo, context);
-        context.setTimeOut("autodemo_countdown", 5f);
+        context.setTimeOut("autodemo_countdown", 5.0);
     }
 
     method endTimeoutMessage(context)
@@ -2573,7 +2576,7 @@ module GTModeRoot
         if (item_w == nil)
             return;
 
-        GTModeRoot.setFocus(item_w);
+        ROOT.setFocus(item_w);
 
         if (warp == true)
             ScrolledWindow::clip.warp(item_w);
@@ -2582,14 +2585,14 @@ module GTModeRoot
     method saveLastFocus(item_w)
     {
         var group_w = item_w.data.group_widget;
-        GTModeProject.history['GTTopRoot::LastFocusGroup'] = group_w.data.label;
-        GTModeProject.history['GTTopRoot::LastFocusItem'] = item_w.data.label;
+        PROJECT.history['GTTopRoot::LastFocusGroup'] = group_w.data.label;
+        PROJECT.history['GTTopRoot::LastFocusItem'] = item_w.data.label;
     }
 
     method returnLastFocus()
     {
-        var group_label = GTModeProject.history['GTTopRoot::LastFocusGroup'];
-        var item_label = GTModeProject.history['GTTopRoot::LastFocusItem'];
+        var group_label = PROJECT.history['GTTopRoot::LastFocusGroup'];
+        var item_label = PROJECT.history['GTTopRoot::LastFocusItem'];
         self.setFocusGroupItem(group_label, item_label, true);
     }
 
@@ -2605,17 +2608,13 @@ module GTModeRoot
             return "";
     }
 
-    static PrizeFactorTable = [
-        1.05f,
-        1.1f,
-        1.15f,
-        1.2f,
-        1.25f,
-        1.3f,
-        1.35f,
-        1.4f,
-        1.45f,
-        1.5f
+    static PrizeFactorTable = 
+    [
+        1.1,
+        1.3,
+        1.5,
+        1.7,
+        2.0
     ];
 
     function checkLoginPresent(context)
@@ -2641,7 +2640,7 @@ module GTModeRoot
 
             var factor = GAME_STATUS.user_profile.context.exp_factor;
             var factor_index = 0;
-            if (factor > 1f)
+            if (factor > 1.0)
             {
                 for (var i = 0; i < PrizeFactorTable.size; ++i)
                 {
@@ -2762,7 +2761,7 @@ module GTModeRoot
             {
                 var key = "UPDATE_DETAILS_%d".format(ver);
                 var message = manager.translate("CommonGTMode", key);
-                if (GTModeProject::IsDevelop(context) || key != message)
+                if (PROJECT::IsDevelop(context) || key != message)
                 {
                     DialogUtil::openInformationDialog(context, message, 
                         manager.translate("CommonGTMode", "UPDATE_DETAILS_TITLE"), 
@@ -2771,69 +2770,69 @@ module GTModeRoot
 
                 KeyValueUtil::set("information", "update_details", ver);
             }
+        }
 
-            var RG = GAME_STATUS.user_profile.item.racing_gear;
-            var has_82 = RG.hasItem2("AVATAR_SET", 82);
-            var has_83 = RG.hasItem2("AVATAR_SET", 83);
-            var has_84 = RG.hasItem2("AVATAR_SET", 84);
+        var RG = GAME_STATUS.user_profile.item.racing_gear;
+        var has_82 = RG.hasItem2("AVATAR_SET", 82);
+        var has_83 = RG.hasItem2("AVATAR_SET", 83);
+        var has_84 = RG.hasItem2("AVATAR_SET", 84);
 
-            if (KeyValueUtil::getFlag("information", "present_srt_suit") != true)
+        if (KeyValueUtil::getFlag("information", "present_srt_suit") != true)
+        {
+            DialogUtil::openInformationDialog(context, 
+                manager.translate("CommonGTMode", "PRESENT_SRT_RACING_GEARS"),
+                manager.translate("CommonGTMode", "PRESENT"),
+                "piece/gt6/information/srt_suit.img");
+
+            KeyValueUtil::set("information", "present_srt_suit", true);
+        }
+
+        if (!has_82)
+            RG.addItem2("AVATAR_SET", 82);
+        if (!has_84)
+            RG.addItem2("AVATAR_SET", 84);
+        if (!has_83)
+            RG.addItem2("AVATAR_SET", 83);
+
+        var vgt_carlist = sInformationVisionGTCars;
+        foreach (var vgt_car in vgt_carlist)
+        {
+            if (KeyValueUtil::getFlag("information", vgt_car) != true)
             {
-                DialogUtil::openInformationDialog(context, 
-                    manager.translate("CommonGTMode", "PRESENT_SRT_RACING_GEARS"),
-                    manager.translate("CommonGTMode", "PRESENT"),
-                    "piece/gt6/information/srt_suit.img");
+                var car_name = gtengine::MSpecDB::getCarName(vgt_car);
+                DialogUtil::openInformationDialog(context,
+                    manager.translate("CommonGTMode", "UPDATE_DETAILS_VGT").build(car_name),
+                    manager.translate("CommonGTMode", "UPDATE_DETAILS_TITLE"),
+                    "piece/gt6/home/advertise/%s.img".format(vgt_car));
 
-                KeyValueUtil::set("information", "present_srt_suit", true);
-            }
-
-            if (!has_82)
-                RG.addItem2("AVATAR_SET", 82);
-            if (!has_84)
-                RG.addItem2("AVATAR_SET", 84);
-            if (!has_83)
-                RG.addItem2("AVATAR_SET", 83);
-
-            var vgt_carlist = sInformationVisionGTCars;
-            foreach (var vgt_car in vgt_carlist)
-            {
-                if (KeyValueUtil::getFlag("information", vgt_car) != true)
-                {
-                    var car_name = gtengine::MSpecDB::getCarName(vgt_car);
-                    DialogUtil::openInformationDialog(context,
-                        manager.translate("CommonGTMode", "UPDATE_DETAILS_VGT").build(car_name),
-                        manager.translate("CommonGTMode", "UPDATE_DETAILS_TITLE"),
-                        "piece/gt6/home/advertise/%s.img".format(vgt_car));
-
-                    KeyValueUtil::set("information", vgt_car, true);
-                }
+                KeyValueUtil::set("information", vgt_car, true);
             }
         }
     }
 
     method requestOnlineEventVersion(context)
     {
-        EventRace2.requestSetting(args => 
+        EventRace2.requestSetting(function(args)
         {
-            var [context, request] = args;
+            |var context, var request| = args;
             if (request.isDone())
             {
                 var setting = EventRace2.decodeSetting(request);
-                GTModeRoot.quick_match_version = setting["quick_match_version"];
-                GTModeRoot.seasonal_version = setting["seasonal_version"];
+                ROOT.quick_match_version = setting["quick_match_version"];
+                ROOT.seasonal_version = setting["seasonal_version"];
 
                 var saved_quick_match_version = KeyValueUtil::getInt("online_event", "quick_match_version");
-                if (saved_quick_match_version < GTModeRoot.quick_match_version)
+                if (saved_quick_match_version < ROOT.quick_match_version)
                 {
-                    var icon = GTModeRoot.getGroupItemWidget("Online_Area", "Online_QuickMatch");
+                    var icon = ROOT.getGroupItemWidget("Online_Area", "Online_QuickMatch");
                     if (icon != nil)
                         icon.New.visible = true;
                 }
 
                 var saved_seasonal_version = KeyValueUtil::getInt("online_event", "seasonal_version");
-                if (saved_seasonal_version < GTModeRoot.seasonal_version)
+                if (saved_seasonal_version < ROOT.seasonal_version)
                 {
-                    var icon = GTModeRoot.getGroupItemWidget("Online_Area", "Online_SeasonalEvent");
+                    var icon = ROOT.getGroupItemWidget("Online_Area", "Online_SeasonalEvent");
                     if (icon != nil)
                         icon.New.visible = true;
                 }
@@ -2850,7 +2849,7 @@ module GTModeRoot
         CursorProject::SceneFaceRoot.requestParticleCommand(context, "TopMenuParticle_Restart");
         CursorProject::StartMenuRoot::StartMenu.reflectCurrentStatus(context);
 
-        GTModeProject.PlayMenuBGM(context, GTModeRoot);
+        PROJECT.PlayMenuBGM(context, ROOT);
 
         News.initialize(context);
         News.off(context);
@@ -2909,25 +2908,25 @@ module GTModeRoot
 
         setTooltipText(context);
 
-        var push_page_name = GTModeProject.history['PushPageName'];
-        if (push_page_name != nil && GTModeProject.defined(push_page_name))
+        var push_page_name = PROJECT.history['PushPageName'];
+        if (push_page_name != nil && PROJECT.defined(push_page_name))
         {
             ContextMain.enableInput();
-            var arg1 = GTModeProject.history['PushPageArg1'];
-            var arg2 = GTModeProject.history['PushPageArg2'];
+            var arg1 = PROJECT.history['PushPageArg1'];
+            var arg2 = PROJECT.history['PushPageArg2'];
 
-            GTModeProject.history['PushPageName'] = "";
-            GTModeProject.history['PushPageArg1'] = nil;
-            GTModeProject.history['PushPageArg2'] = nil;
+            PROJECT.history['PushPageName'] = "";
+            PROJECT.history['PushPageArg1'] = nil;
+            PROJECT.history['PushPageArg2'] = nil;
 
-            GTModeProject[push_page_name].open(context, arg1, arg2);
+            PROJECT[push_page_name].open(context, arg1, arg2);
         }
         else if (!TutorialUtil::isBegin("gttop", "get_first_car"))
         {
             context.pageInRootTransition();
         }
 
-        GTModeProject.TryLoadMenuSound();
+        PROJECT.TryLoadMenuSound();
         ContextMain.enableInput();
 
         if (!GAME_STATUS.user_profile.option.kiosk_mode)
@@ -2962,21 +2961,21 @@ module GTModeRoot
     method onKeyPress(context, event)
     {
         if (self.ignore_on_activate)
-            return STATE_EXIT;
+            return EVENTRESULT_CONTINUE;
 
         if (LeaveDetectUtil::activated(context, event))
-            return STATE_YIELD;
+            return EVENTRESULT_FILTER;
 
         if (CursorProject::StartMenuRoot::StartMenu.checkKeyPress(context, event))
         {
             startLeaveDetect(context);
-            return STATE_YIELD;
+            return EVENTRESULT_FILTER;
         }
 
         switch (event.keysym)
         {
             case CELL_PAD_CTRL_SELECT:
-                if (GTModeProject::IsDevelop(context))
+                if (PROJECT::IsDevelop(context))
                 {
                     LeaveDetectUtil::suspend(context);
                     var state = context.getUpdateContext().getPadButtonState(0);
@@ -3000,9 +2999,9 @@ module GTModeRoot
 
                     LeaveDetectUtil::resume(context);
                 }
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
         }
 
-        return STATE_EXIT;
+        return EVENTRESULT_CONTINUE;
     }
 }

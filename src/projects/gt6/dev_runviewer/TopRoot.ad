@@ -18,7 +18,7 @@
 #include "projects/gt6/option/PS3ControllerRoot.h"
 
 
-module TopRoot
+module ROOT
 {
     #include "projects/gt6/dev_runviewer/RunviewerUtil.ad"
 
@@ -36,10 +36,10 @@ module TopRoot
     {
         if (main::pdiext::MSystemConfiguration::isSDTV())
         {
-            hidden::Item::label.original_scale_x = 2.8f;
-            hidden::Item::label.original_scale_y = 2.8f;
-            hidden::Item::value.original_scale_x = 2.8f;
-            hidden::Item::value.original_scale_y = 2.8f;
+            hidden::Item::label.original_scale_x = 2.8;
+            hidden::Item::label.original_scale_y = 2.8;
+            hidden::Item::value.original_scale_x = 2.8;
+            hidden::Item::value.original_scale_y = 2.8;
         }
     }
 
@@ -48,19 +48,19 @@ module TopRoot
 
     }
 
-    static black = main::menu::MColorObject(0.05f, 0.05f, 0.05f);
-    static red = main::menu::MColorObject(0.1f, 0.05f, 0.05f);
-    static blue = main::menu::MColorObject(0.05f, 0.05f, 0.1f);
-    static purple = main::menu::MColorObject(0.075f, 0.05f, 0.1f);
-    static purple2 = main::menu::MColorObject(0.0875f, 0.05f, 0.1f);
-    static green = main::menu::MColorObject(0.05f, 0.1f, 0.05f);
-    static yellow = main::menu::MColorObject(0.1f, 0.1f, 0.05f);
-    static cyan = main::menu::MColorObject(0.05f, 0.1f, 0.1f);
-    static gray = main::menu::MColorObject(0.1f, 0.1f, 0.1f);
-    static orange = main::menu::MColorObject(0.1f, 0.075f, 0.05f);
-    static light_blue = main::menu::MColorObject(0.075f, 0.075f, 0.1f);
-    static light_cyan = main::menu::MColorObject(0.075f, 0.1f, 0.1f);
-    static transparent = main::menu::MColorObject(0f, 0f, 0f, 0f);
+    static black = main::menu::MColorObject(0.05, 0.05, 0.05);
+    static red = main::menu::MColorObject(0.1, 0.05, 0.05);
+    static blue = main::menu::MColorObject(0.05, 0.05, 0.1);
+    static purple = main::menu::MColorObject(0.075, 0.05, 0.1);
+    static purple2 = main::menu::MColorObject(0.0875, 0.05, 0.1);
+    static green = main::menu::MColorObject(0.05, 0.1, 0.05);
+    static yellow = main::menu::MColorObject(0.1, 0.1, 0.05);
+    static cyan = main::menu::MColorObject(0.05, 0.1, 0.1);
+    static gray = main::menu::MColorObject(0.1, 0.1, 0.1);
+    static orange = main::menu::MColorObject(0.1, 0.075, 0.05);
+    static light_blue = main::menu::MColorObject(0.075, 0.075, 0.1);
+    static light_cyan = main::menu::MColorObject(0.075, 0.1, 0.1);
+    static transparent = main::menu::MColorObject(0.0, 0.0, 0.0, 0.0);
     
     hidden.visible = false;
     hidden::Item::value.visible = false;
@@ -176,7 +176,7 @@ module TopRoot
         {
             tree_str = button_name;
         }
-        var buf = "%{tree_str},%{button_name},%{vmk_version},%{build_date},%{svn_revision},%{fsroot},%{osd_name},%{online_name},%{tree_str}\n";
+        var buf = "%{time_str},%{button_name},%{vmk_version},%{build_date},%{svn_revision},%{fsroot},%{osd_name},%{online_name},%{tree_str}\n";
 
         var st = main::pdistd::GetFileStatus(path);
         if (st["result"] == 0)
@@ -196,7 +196,7 @@ module TopRoot
         var has_load = submenu_load_map[name];
         if (has_load == nil)
         {
-            RunViewerProject.load("/projects/gt6/dev_runviewer/%{name}");
+            PROJECT.load("/projects/gt6/dev_runviewer/%{name}");
             submenu_load_map[name] = true;
         }
     }
@@ -366,7 +366,7 @@ module TopRoot
 
     function on_start_gamemaker(context, index, menuitem, item, arg)
     {
-        RunViewerProject.load("/projects/gt6/dev_runviewer/GameMaker");
+        PROJECT.load("/projects/gt6/dev_runviewer/GameMaker");
         
         GameMaker::onStart(context, menuitem.label, index);
     }
@@ -721,11 +721,11 @@ module TopRoot
 
     function start_menu(context, stack_unit, focus_index)
     {
-        TopRoot::Title::label.text = stack_unit.title;
+        ROOT::Title::label.text = stack_unit.title;
 
         if (stack_unit.create_menulist_cb_arg != nil)
         {
-            var [cb, arg] = stack_unit.create_menulist_cb_arg;
+            |var cb, var arg| = stack_unit.create_menulist_cb_arg;
             var menuitem_list = cb(context, arg);
             stack_unit.menuitem_list = StackUnit::applyAppearance(menuitem_list);
         }
@@ -761,13 +761,15 @@ module TopRoot
         var prev_stack_unit = sStack.pop();
         if (prev_stack_unit == nil) 
             return false;
-
-
-        else if (prev_stack_unit.cancel_cb != nil)
-            prev_stack_unit.cancel_cb(context);
+        else
+        {
+            if (prev_stack_unit.cancel_cb != nil)
+                prev_stack_unit.cancel_cb(context);
+            
+            var stack_unit = sStack.getCurrent();
+            start_menu(context, stack_unit, prev_stack_unit.prev_focus_index);
+        }
         
-        var stack_unit = sStack.getCurrent();
-        start_menu(context, stack_unit, prev_stack_unit.prev_focus_index);
         return true;
     }
 
@@ -797,7 +799,7 @@ module TopRoot
         if (unit.preback_cb != nil)
             back_ok = unit.preback_cb(context, unit.preback_cb_arg);
         if (!back_ok)
-            return 2;
+            return EVENTRESULT_FILTER;
 
         var res = close_menu(context);
         if (!res)
@@ -808,7 +810,7 @@ module TopRoot
                 SequenceUtil::startProject(context, "dev_runviewer");
             }
         }
-        return 2;
+        return EVENTRESULT_FILTER;
     }
 
     module Menu::ListBox
@@ -879,7 +881,7 @@ module TopRoot
 
             var new_menuitem = menu_items[new_index];
 
-            TopRoot::Tooltip::tip.value = new_menuitem.tip;
+            ROOT::Tooltip::tip.value = new_menuitem.tip;
 
             var item = self.getItemWidget(new_index, context);
             item.cursor.ScalarInterpolator.restart();
@@ -887,12 +889,12 @@ module TopRoot
             switch (new_menuitem.type)
             {
                 case MenuItemTEXT:
-                    TopRoot.setFocus(Menu.ListBox);
+                    ROOT.setFocus(Menu.ListBox);
                     break;
 
                 case MenuItemSLIDER:
                     var item = self.getItemWidget(new_index, context);
-                    TopRoot.setFocus(item.slider);
+                    ROOT.setFocus(item.slider);
                     break;
 
                 case MenuItemINPUT:
@@ -901,7 +903,7 @@ module TopRoot
                         wgt.Input.input.mode = "ten_key";
                     else
                         wgt.Input.input.mode = "normal";
-                    TopRoot.setFocus(wgt.Input.input);
+                    ROOT.setFocus(wgt.Input.input);
 
                     wgt.Input.input.tooltip = true;
                     wgt.Input.input.tooltip_key = "";
@@ -922,7 +924,7 @@ module TopRoot
             if (menu_items.size <= 0 || menu_items.size <= index)
             {
                 main::sound.play("disable");
-                return 1;
+                return EVENTRESULT_STOP;
             }
 
             main::sound.play("ok");
@@ -936,13 +938,13 @@ module TopRoot
                 var arg = menuitem.arg;
                 func(context, index, menuitem, item, arg);
             }
-            return 1;
+            return EVENTRESULT_STOP;
         }
 
         method onKeyPress(context, event)
         {
             if (sStack.isVacant())
-                return 0;
+                return EVENTRESULT_CONTINUE;
 
             var menu_items = sStack.getCurrent().menuitem_list;
             var list = menu_items;
@@ -966,7 +968,7 @@ module TopRoot
 
             switch (event.keysym)
             {
-                case 65421:
+                case CELL_PAD_CTRL_START:
                     main::sound.play("ok");
                     if (main::GAME_STATUS.branch.movie_renderer_mode)
                     {
@@ -979,9 +981,9 @@ module TopRoot
                         on_single_race(context);
                     }
 
-                    return 2;
+                    return EVENTRESULT_FILTER;
 
-                case 65379:
+                case CELL_PAD_CTRL_SELECT:
                     main::sound.play("ok");
                     if (main::GAME_STATUS.branch.movie_renderer_mode)
                     {
@@ -993,43 +995,43 @@ module TopRoot
                         putDevLog("[SELECT]on_autodemo");
                         on_autodemo(context);
                     }
-                    return 2;
+                    return EVENTRESULT_FILTER;
                 
-                case 65495:
+                case CELL_PAD_CTRL_L1:
                     main::sound.play("ok");
                     putDevLog("[L1]on_save_game");
                     on_save_game(context);
-                    return 2;
+                    return EVENTRESULT_FILTER;
                 
 
 
-                case 65362:
-                    return 0;
+                case CELL_PAD_CTRL_L3_UP:
+                    return EVENTRESULT_CONTINUE;
                 
-                case 65364:
-                    return 0;
+                case CELL_PAD_CTRL_L3_DOWN:
+                    return EVENTRESULT_CONTINUE;
 
-                case 65361:
+                case CELL_PAD_CTRL_L3_LEFT:
                     main::sound.play("cursor");
                     self.focus_index -= 10;
-                    return 2;
+                    return EVENTRESULT_FILTER;
                 
-                case 65363:
+                case CELL_PAD_CTRL_L3_RIGHT:
                     main::sound.play("cursor");
                     self.focus_index += 10;
-                    return 2;
+                    return EVENTRESULT_FILTER;
 
-                case 65496:
+                case CELL_PAD_CTRL_L2:
                     main::sound.play("cursor");
                     self.focus_index = 0;
-                    return 2;
+                    return EVENTRESULT_FILTER;
 
-                case 65501:
+                case CELL_PAD_CTRL_R2:
                     main::sound.play("cursor");
                     self.focus_index = list.size;
-                    return 2;
+                    return EVENTRESULT_FILTER;
             }
-            return 0;
+            return EVENTRESULT_CONTINUE;
         }
     }
 
@@ -1082,7 +1084,7 @@ module TopRoot
             if (self.close_cb != nil)
                 self.close_cb(context, event.text, self, self.arg);
 
-            return 0;
+            return EVENTRESULT_CONTINUE;
         }
 
         method onConfirmed(context, text)

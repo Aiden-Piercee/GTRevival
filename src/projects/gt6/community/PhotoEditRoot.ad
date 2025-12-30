@@ -12,7 +12,7 @@
 
 
 
-module PhotoEditRoot
+module ROOT
 {
     attribute popup;
     attribute closed = false;
@@ -116,13 +116,13 @@ module PhotoEditRoot
 
         method beginImpl(context)
         {
-            var [res, sanitized_text] = filterText(context, self.comment, false);
+            |var res, var sanitized_text| = filterText(context, self.comment, false);
 
             if (!res)
                 return false;
 
             var comment = sanitized_text;
-            captureIcon(context, PhotoEditRoot.SceneFace, self.cp, self.image_path);
+            captureIcon(context, ROOT.SceneFace, self.cp, self.image_path);
 
             var jpg = pdistd::ReadFile(self.image_path);
             var car_code = cp.getCarCode();
@@ -137,7 +137,7 @@ module PhotoEditRoot
             self.request = main::Photo.requestUploadCarImage(jpg["buffer"], 
                 gtengine::MSpecDB::getCarShortName(car_code), 
                 place, comment,
-                (args) => { });
+                function(args) {});
 
             return true;
         }
@@ -158,7 +158,7 @@ module PhotoEditRoot
 
         method beginImpl(context)
         {
-            var [res, sanitized_text] = filterText(context, self.comment, false);
+            |var res, var sanitized_text| = filterText(context, self.comment, false);
 
             if (!res)
                 return false;
@@ -173,7 +173,7 @@ module PhotoEditRoot
                 self.local_photo.position_x,
                 self.local_photo.position_y,
                 self.local_photo.position_z,
-                (args) => { });
+                function(args) {});
 
             return true;
         }
@@ -227,11 +227,11 @@ module PhotoEditRoot
         if (!QUERY(context, "Community", "QUERY_UPDATE_COMMENT"))
             return false;
 
-        var [res0, sanitized_text] = filterText(context, comment, true);
+        |var res0, var sanitized_text| = filterText(context, comment, true);
         if (!res0)
             return false;
 
-        var request = main::Photo.requestUpdateComment(photo["photo_id"], sanitized_text, (args) => {});
+        var request = main::Photo.requestUpdateComment(photo["photo_id"], sanitized_text, function(args) {});
         var res = Grim2Util::joinAwait(context, request);
         if (res)
         {
@@ -247,7 +247,7 @@ module PhotoEditRoot
         self.is_photo = is_photo;
         self.result = false;
         self.closed = false;
-        self.popup = SequenceUtil::ModalPage(context, PhotoEditRoot);
+        self.popup = SequenceUtil::ModalPage(context, ROOT);
         self.popup.open();
         var res = self.result;
         self.result = nil;
@@ -302,7 +302,7 @@ module PhotoEditRoot
     {
         main::sound.play("cancel");
         self.setFocus(Body::R::VBox::Cancel);
-        return STATE_YIELD;
+        return EVENTRESULT_FILTER;
     }
 
     method onInitialize(context)
@@ -343,9 +343,8 @@ module PhotoEditRoot
             else
             {
                 setThumbnailImage(image_face, self.photo["photo_id"], self.photo["status"]);
+                caption = self.photo["car_name"];
             }
-
-            caption = self.photo["car_name"];
         }
         else if (self.local_photo != nil)
         {
@@ -377,12 +376,12 @@ module PhotoEditRoot
         else
             self.setFocus(Body::L::InputTextBox::Text::input);
 
-        return STATE_YIELD;
+        return EVENTRESULT_FILTER;
     }
 
     method onFinalize(context)
     {
-        return STATE_YIELD;
+        return EVENTRESULT_FILTER;
     }
 
     method onUpdate(context)
@@ -406,17 +405,18 @@ module PhotoEditRoot
         method onTextClose(context, event)
         {
             setCount(context, self.value.length);
-            return 0;
+            return EVENTRESULT_CONTINUE;        
         }
 
         method onKeyRelease(context, event)
         {
-            if (event.keysym == CELL_PAD_CTRL_SQUARE || event.keysym == KEY_BACKSPACE  || event.keysym == KEY_DELETE)
+            // Backspace, or delete
+            if (event.keysym == CELL_PAD_CTRL_SQUARE || event.keysym == 0xFF08  || event.keysym == 0xFFFF)
             {
                 setCount(context, self.value.length);
             }
 
-            return 0;
+            return EVENTRESULT_CONTINUE;          
         }
     }
 
@@ -433,26 +433,26 @@ module PhotoEditRoot
                     comment = manager.translate("Community", "DEFAULT_PHOTO_COMMENT");
 
                 var res = false;
-                if (PhotoEditRoot.cp != nil)
+                if (ROOT.cp != nil)
                 {
-                    res = uploadCarPhoto(context, PhotoEditRoot.cp, comment);
+                    res = uploadCarPhoto(context, ROOT.cp, comment);
                 }
-                else if (PhotoEditRoot.photo != nil)
+                else if (ROOT.photo != nil)
                 {
-                    res = updateOnlineComment(context, PhotoEditRoot.photo, comment);
+                    res = updateOnlineComment(context, ROOT.photo, comment);
                 }
-                else if (PhotoEditRoot.local_photo != nil)
+                else if (ROOT.local_photo != nil)
                 {
-                    res = uploadPhoto(context, PhotoEditRoot.local_photo, comment);
+                    res = uploadPhoto(context, ROOT.local_photo, comment);
                 }
 
                 if (res)
                 {
-                    PhotoEditRoot.result = res;
-                    PhotoEditRoot.close(context);
+                    ROOT.result = res;
+                    ROOT.close(context);
                 }
 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             }
         }
 
@@ -462,14 +462,14 @@ module PhotoEditRoot
             {
                 sound.play("cancel");
                 PhotoEditRoot.close(context);
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             }
 
             method onActivate(context)
             {
                 sound.play("ok");
                 PhotoEditRoot.close(context);
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             }
         }
     }

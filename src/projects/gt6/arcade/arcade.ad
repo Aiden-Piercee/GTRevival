@@ -12,7 +12,7 @@
 
 
 
-module ArcadeProject
+module PROJECT
 {
     function onLoad(update_context)
     {
@@ -299,13 +299,13 @@ module ArcadeProject
                             self.index = index;
                             self.current = next;
                         }
-                        else
+                    }
+                    else
+                    {
+                        self.index++;
+                        if (self.index < sequence_list.size)
                         {
-                            self.index++;
-                            if (self.index < sequence_list.size)
-                            {
-                                self.current = sequence_list[self.index];
-                            }
+                            self.current = sequence_list[self.index];
                         }
                     }
                 }
@@ -343,12 +343,12 @@ module ArcadeProject
                 var having_dirt_tire = gtengine::MSpecDB::checkFlag(car_code, gtengine::GenericFlag::HAVE_DIRT_TIRE);
                 if (!having_dirt_tire)
                     return false;
-                else
-                {
-                    var is_racing_kart = gtengine::MSpecDB::checkFlag(car_code, gtengine::GenericFlag::IS_RACING_KART);
-                    if (!is_racing_kart && self.selected_kartonly_course)
-                        return false;
-                }
+            }
+            else
+            {
+                var is_racing_kart = gtengine::MSpecDB::checkFlag(car_code, gtengine::GenericFlag::IS_RACING_KART);
+                if (!is_racing_kart && self.selected_kartonly_course)
+                    return false;
             }
 
             return true;
@@ -374,7 +374,7 @@ module ArcadeProject
     function GetGameModeName(game_mode)
     {
         var game_mode_name = "";
-        var res = gtengine::GameMode.find_static(pair => pair[1] == game_mode);
+        var res = gtengine::GameMode.find_static(function(pair) { return pair[1] == game_mode; });
         game_mode_name = res[0][0].toString();
         return game_mode_name;
     }

@@ -154,6 +154,7 @@ module TutorialUtil
         switch (params["speaker"])
         {
             case "SPEAKER_VETTEL":
+            default:
                 if (use_lang == "DE")
                     voice_dir = "/sound_gt/guide/gt6/vettel/DE";
                 else
@@ -303,7 +304,7 @@ module TutorialUtil
 
     function showTutorial(context, data, category, exec_func_args)
     {
-        foreach(var t in data)
+        foreach (var t in data)
         {
             var check_begin = t["check_begin"];
             var check_progress = t["check_progress"];

@@ -12,13 +12,13 @@
 
 
 
-module MessageRoot
+module ROOT
 {
     function updateMessage(context)
     {
         var mail_list = [];
         var max_mail_id = GAME_STATUS.user_profile.mail.getMaxMailId();
-        var request = GTMail.requestAllMailList(max_mail_id, (args) => {});
+        var request = GTMail.requestAllMailList(max_mail_id, function(args) {});
 
         if (Grim2Util::joinAwait(context, request))
         {
@@ -40,7 +40,7 @@ module MessageRoot
         if (!isFriend(user_id))
         {
             var my_user_id = Grim2.getLoginUserId();
-            var request = UserProfile2.requestUserProfile(my_user_id, (args) => {});
+            var request = UserProfile2.requestUserProfile(my_user_id, function(args) {});
             if (Grim2Util::joinAwait(context, request))
             {
                 var u = UserProfile2.decodeUserProfile(request);
@@ -51,7 +51,7 @@ module MessageRoot
                 }
             }
 
-            var your_profile = MessageRoot.user_profile_map[user_id];
+            var your_profile = ROOT.user_profile_map[user_id];
             if (your_profile == nil)
                 return false;
 
@@ -126,7 +126,7 @@ module MessageRoot
         self.result = nil;
         self.user_profile_map = Map();
         self.closed = true;
-        self.modal_page = main::SequenceUtil::ModalPage(context, MessageRoot);
+        self.modal_page = main::SequenceUtil::ModalPage(context, ROOT);
         self.modal_page.open();
         
         var res = self.result;
@@ -150,7 +150,7 @@ module MessageRoot
 
         PageUtil::visibleUnderPages(context, self);
 
-        MessageRoot.setFocus(nil);
+        ROOT.setFocus(nil);
         
         var actor = self.CloseActor;
         actor.forward();
@@ -171,7 +171,7 @@ module MessageRoot
     {
         main::sound.play("cancel");
         close(context);
-        return STATE_YIELD;
+        return EVENTRESULT_FILTER;
     }
 
     method onInitialize(context)
@@ -182,12 +182,12 @@ module MessageRoot
         actor.forward();
         actor.restart();
 
-        actor.on_effect_end = (context) =>
+        actor.on_effect_end = function (context)
         {
             actor.on_effect_end = nil;
             PageUtil::invisibleUnderPages(context, self);
             ContextMain.enableInput();
-            MessageRoot.closed = false;
+            ROOT.closed = false;
         };
 
         self.CloseActor.stop();
@@ -207,14 +207,14 @@ module MessageRoot
 
 
         Pane::Main::Mode.setEmpty(false, "");
-        return STATE_YIELD;
+        return EVENTRESULT_FILTER;
     }
     
     method onFinalize(context)
     {
         Pane::Main::Mode::Message.finalize(context);
         self.user_profile_map = nil;
-        return STATE_YIELD;
+        return EVENTRESULT_FILTER;
     }
 
     method onUpdate(context)
@@ -240,12 +240,12 @@ module MessageRoot
                 {
                     sound.play("ok");
                     SendReportRoot.open(context, p);
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 }
             }
         }
 
-        return STATE_EXIT;
+        return EVENTRESULT_CONTINUE;
     }
     
     method onFocusEnter(context, event)
@@ -263,7 +263,7 @@ module MessageRoot
         }
 
         SBox::ReportHelp.set(context, show_report);
-        return 0;
+        return EVENTRESULT_CONTINUE;
     }
 
     method setNotYetRead(context)
@@ -307,7 +307,7 @@ module MessageRoot
                 widget.insensitive = false;
                 initialize(context, widget, args);
 
-                MessageRoot.setFocus(widget.first.Button);
+                ROOT.setFocus(widget.first.Button);
             }
 
             module Top::VBox
@@ -322,7 +322,7 @@ module MessageRoot
                         Pane::Menu::Mode.initialize(context, Pane::Menu::Mode::Top::VBox, self.name);
                         Pane::Main::Mode.changeMode(context, Pane::Main::Mode::Top_User);
 
-                        return STATE_YIELD;
+                        return EVENTRESULT_FILTER;
                     }
                 }
 
@@ -336,7 +336,7 @@ module MessageRoot
                         Pane::Menu::Mode.initialize(context, Pane::Menu::Mode::Top::VBox, self.name);
                         Pane::Main::Mode.changeMode(context, Pane::Main::Mode::Top_Friend);
 
-                        return STATE_YIELD;
+                        return EVENTRESULT_FILTER;
                     }
                 }
             }
@@ -351,21 +351,21 @@ module MessageRoot
                         Pane::Menu::Mode.changeMode(context, Pane::Menu::Mode::Top::VBox, "User");
                         Pane::SubMenu::Mode.changeMode(context, Pane::SubMenu::Mode::Top::VBox);
                         Pane::Main::Mode.changeMode(context, Pane::Main::Mode::Top_User);
-                        MessageRoot.setNotYetRead(context);
+                        ROOT.setNotYetRead(context);
                     }
 
                     method onCancel(context)
                     {
                         sound.play("cancel");
                         backImpl(context);
-                        return STATE_YIELD;
+                        return EVENTRESULT_FILTER;
                     }
 
                     method onActivate(context)
                     {
                         sound.play("ok");
                         backImpl(context);
-                        return STATE_YIELD;
+                        return EVENTRESULT_FILTER;
                     }
                 }
             }
@@ -445,8 +445,8 @@ module MessageRoot
                 method onCancel(context)
                 {
                     sound.play("cancel");
-                    MessageRoot.setFocus(Pane::Menu::Mode::Top::VBox::User::Button);
-                    return STATE_YIELD;
+                    ROOT.setFocus(Pane::Menu::Mode::Top::VBox::User::Button);
+                    return EVENTRESULT_FILTER;
                 }
 
                 module ListBox
@@ -465,7 +465,7 @@ module MessageRoot
                         }
                     
                         SBox::ReportHelp.set(context, show_report);
-                        return 0;
+                        return EVENTRESULT_CONTINUE;
                     }
 
                     method getReportInfo(context)
@@ -497,7 +497,7 @@ module MessageRoot
                 {
                     sound.play("cancel");
                     MessageRoot.setFocus(Pane::Menu::Mode::Top::VBox::Friend::Button);
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 }
             }
 
@@ -545,8 +545,8 @@ module MessageRoot
                 method onCancel(context)
                 {
                     sound.play("cancel");
-                    MessageRoot.setFocus(Pane::Menu::Mode::Message::VBox::Back::Button);
-                    return STATE_YIELD;
+                    ROOT.setFocus(Pane::Menu::Mode::Message::VBox::Back::Button);
+                    return EVENTRESULT_FILTER;
                 }
 
                 module Reload
@@ -555,7 +555,7 @@ module MessageRoot
                     {
                         sound.play("ok");
                         Message.reload(context);
-                        return STATE_YIELD;
+                        return EVENTRESULT_FILTER;
                     }
                 }
             }
@@ -588,8 +588,8 @@ module MessageRoot
                 method onCancel(context)
                 {
                     sound.play("cancel");
-                    MessageRoot.setFocus(Pane::Menu::Mode::Message::VBox::Back::Button);
-                    return STATE_YIELD;
+                    ROOT.setFocus(Pane::Menu::Mode::Message::VBox::Back::Button);
+                    return EVENTRESULT_FILTER;
                 }
 
                 module Profile
@@ -608,7 +608,7 @@ module MessageRoot
                             Pane::Main::Mode::Message.initialize(context, Pane::Main::Mode::Message.user_id);
                         }
 
-                        return STATE_YIELD;
+                        return EVENTRESULT_FILTER;
                     }
                 }
 
@@ -627,7 +627,7 @@ module MessageRoot
                             Pane::Main::Mode::Message.initialize(context, user_id);
                         }
     
-                        return STATE_YIELD;
+                        return EVENTRESULT_FILTER;
                     }
                 }
 
@@ -644,13 +644,13 @@ module MessageRoot
                             var user_id = Pane::Main::Mode::Message.user_id;
                             GAME_STATUS.user_profile.mail.removeByUser(user_id);
     
-                            MessageRoot.dirty = true;
+                            ROOT.dirty = true;
                             GENERIC_RESULT(context, true);
     
                             Pane::Main::Mode::Message.initialize(context, user_id);
                         }
     
-                        return STATE_YIELD;
+                        return EVENTRESULT_FILTER;
                     }
                 }
             }
@@ -692,7 +692,7 @@ module MessageRoot
 
                 self.message = message_list[0];
 
-                var [mail_id, user_id0, sender, subject, body, date] = self.message;
+                |var mail_id, var user_id0, var sender, var subject, var body, var date| = self.message;
                 var d = pdistd::MTime();
                 d.setBySecond(date);
 
@@ -710,24 +710,24 @@ module MessageRoot
                     self.Image::SystemMessage.visible = true;
                     self.Image::SystemMessage.image_path = "/piece/gt6/community/system_message.img";
                     
-                    var [dummy, what] = subject.split(",");
+                    |var dummy, var what| = subject.split(",");
                     self.Body::TextFace.text = getRejectText(what);
                 }
                 else
                 {
                     self.Body::TextFace.text = body;
 
-                    var u = MessageRoot.user_profile_map[user_id];
+                    var u = ROOT.user_profile_map[user_id];
                     if (u == nil)
                     {
                         var me = self;
-                        UserProfile2.requestUserProfile(user_id, (args) => 
+                        UserProfile2.requestUserProfile(user_id, function(args)
                         {
-                            var [context, request] = args;
+                            |var context, var request| = args;
                             if (request.isDone())
                             {
                                 var user_profile = UserProfile2.decodeUserProfile(request);
-                                MessageRoot.user_profile_map[user_id] = user_profile;
+                                ROOT.user_profile_map[user_id] = user_profile;
 
                                 me.Head::TextFaceTitle.text = checkNickName(context, user_profile);
                                 
@@ -778,7 +778,7 @@ module MessageRoot
 
             method initialize(context, friend)
             {
-                var [user_profile, presence, np_presence] = friend;
+                |var user_profile, var presence, var np_presence| = friend;
                 self.user_profile = user_profile;
 
                 self.Head::TextFaceID.text = user_profile["user_id"];
@@ -791,7 +791,7 @@ module MessageRoot
                 var photo_id = user_profile["photo_id_avatar"];
                 setImage(self.Image::ImageFace, photo_id);
 
-                var [online, text] = getPresenceInfo(context, presence, np_presence);
+                |var online, var text| = getPresenceInfo(context, presence, np_presence);
                 self.Foot::Presence.active = online;
                 self.Foot::Presence::Label.text = text;
                 self.Foot::Presence::Label_a.text = text;
@@ -848,15 +848,15 @@ module MessageRoot
                     return;
                 }
 
-                var u = MessageRoot.user_profile_map[user_id];
+                var u = ROOT.user_profile_map[user_id];
                 if (u == nil)
                 {
-                    var request = UserProfile2.requestUserProfile(user_id, (args) => {});
+                    var request = UserProfile2.requestUserProfile(user_id, function(args) {});
                     
                     if (Grim2Util::joinAwait(context, request))
                     {
                         var user_profile = UserProfile2.decodeUserProfile(request);
-                        MessageRoot.user_profile_map[user_id] = user_profile;
+                        ROOT.user_profile_map[user_id] = user_profile;
 
                         var photo_id = user_profile["photo_id_avatar"];
                         setImage(w.Image::ImageFace, photo_id);
@@ -872,8 +872,8 @@ module MessageRoot
 
             method initializeReject(context, message)
             {
-                var [mail_id, user_id, sender, subject, body, date, new_flag] = message;
-                var [dummy, what, value3, value4, value5, value6] = subject.split(",");
+                |var mail_id, var user_id, var sender, var subject, var body, var date, var new_flag| = message;
+                |var dummy, var what, var value3, var value4, var value5, var value6| = subject.split(",");
 
                 var target = self.Body_SystemMessage;
                 target.Label.text = getRejectText(what);
@@ -904,7 +904,7 @@ module MessageRoot
             method initialize(context, message)
             {
                 self.message = message;
-                var [mail_id, user_id, sender, subject, body, date, new_flag] = message;
+                |var mail_id, var user_id, var sender, var subject, var body, var date, var new_flag| = message;
 
                 var d = pdistd::MTime();
                 d.setBySecond(date);
@@ -923,11 +923,11 @@ module MessageRoot
                 if (subject != "")
                 {
                     self.Body::Label.visible = true;
-                    var [what] = subject.split(",");
+                    |var what| = subject.split(",");
 
                     if (what == "EVENT")
                     {
-                        var [dummy, club_id, club_event_id] = subject.split(",");
+                        |var dummy, var club_id, var club_event_id| = subject.split(",");
                         self.Body::Label.text = manager.translate("Community", "MESSAGE_RECOMMEND_EVENT");
                         
                         var target = self.Body::Event;
@@ -935,9 +935,9 @@ module MessageRoot
 
                         var me = self;
 
-                        Community.requestEvent(club_id, club_event_id, (args) => 
+                        Community.requestEvent(club_id, club_event_id, function(args)
                         {
-                            var [context, request] = args;
+                            |var context, var request| = args;
                             if (request.isDone())
                             {
                                 var event = Community.decodeEvent(request);
@@ -958,7 +958,7 @@ module MessageRoot
                     }
                     else if (what == "CLUB")
                     {
-                        var [dummy, club_id] = subject.split(",");
+                        |var dummy, var club_id| = subject.split(",");
                         self.Body::Label.text = "   ";
                         
                         var target = self.Body::Club;
@@ -966,9 +966,9 @@ module MessageRoot
 
                         var me = self;
 
-                        Community.requestClub(club_id, (args) => 
+                        Community.requestClub(club_id, function(args) 
                         {
-                            var [context, request] = args;
+                            |var context, var request| = args;
                             if (request.isDone())
                             {
                                 var club = Community.decodeClub(request);
@@ -1023,12 +1023,12 @@ module MessageRoot
                 if (subject == "")
                     return;
 
-                var [what] = subject.split(",");
+                |var what| = subject.split(",");
 
                 if (self.club == nil && (what == "CLUB" || what == "EVENT"))
                 {
-                    var [dummy, club_id] = subject.split(",");
-                    var request = Community.requestClub(club_id, (args) => {});
+                    |var dummy, var club_id| = subject.split(",");
+                    var request = Community.requestClub(club_id, function(args) {});
                     
                     var res = Grim2Util::joinAwait(context, request);
 
@@ -1040,8 +1040,8 @@ module MessageRoot
 
                 if (self.event == nil && what == "EVENT")
                 {
-                    var [dummy, club_id, club_event_id] = subject.split(",");
-                    var request = Community.requestEvent(club_id, club_event_id, (args) => {});
+                    |var dummy, var club_id, var club_event_id| = subject.split(",");
+                    var request = Community.requestEvent(club_id, club_event_id, function(args) {});
                     
                     var res = Grim2Util::joinAwait(context, request);
 
@@ -1051,8 +1051,8 @@ module MessageRoot
                     }
                 }
 
-                MessageRoot.result = [self.club, self.event];
-                MessageRoot.close(context);
+                ROOT.result = [self.club, self.event];
+                ROOT.close(context);
             }
 
             method onActivate(context)
@@ -1062,7 +1062,7 @@ module MessageRoot
                 var message = self.message;
                 if (message != nil)
                 {
-                    var [mail_id] = message;
+                    |var mail_id| = message;
                     var club0;
                     var event0;
 
@@ -1076,12 +1076,12 @@ module MessageRoot
                         event0 = self.event;
                     }
 
-                    var res = ViewMessageRoot.openMessage(context, message, club0, event0, MessageRoot.no_link);
+                    var res = ViewMessageRoot.openMessage(context, message, club0, event0, ROOT.no_link);
                     if (res)
                         linkCallback(context);
                 }
 
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             }
 
             method getReportInfo(context)

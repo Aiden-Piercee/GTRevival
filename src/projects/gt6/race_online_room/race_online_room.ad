@@ -156,7 +156,7 @@ module RaceProject
             sCancelableDialogOpening = true;
 
             DialogUtil::openConfirmDialog(context, DialogUtil::ERROR, 
-                context.translate(RaceOnlineRoomProject, "OnlineMessage", "UNABLE_TO_DO_EXCEPT_OWNER"));
+                context.translate(PROJECT, "OnlineMessage", "UNABLE_TO_DO_EXCEPT_OWNER"));
 
             sCancelableDialogOpening = false;
             return false;
@@ -237,7 +237,7 @@ module RaceProject
                     gtengine::PARTS_TIRE::DIRT :
                     gtengine::PARTS_TIRE::SNOW;
 
-                var [tireF, tireR] = cp.getTireCategories();
+                |var tireF, var tireR| = cp.getTireCategories();
                 if (tireF != regularTire || tireR != regularTire)
                     cp.setSuitableTiresWithTrunk(course, rc.weather == gtengine::TrackDayWeather::RAINY);
             }
@@ -246,7 +246,7 @@ module RaceProject
         }
         else
         {
-            var [tireF, tireR] = cp.getTireCategories();
+            |var tireF, var tireR| = cp.getTireCategories();
             if (tireF == gtengine::PARTS_TIRE::DIRT || tireF == gtengine::PARTS_TIRE::SNOW ||
                 tireR == gtengine::PARTS_TIRE::DIRT || tireR == gtengine::PARTS_TIRE::SNOW)
             {
@@ -301,12 +301,12 @@ module RaceProject
             "ACTIVE_STEERING_STRONG"
         ];
 
-        return menu::TranslateRtext(RaceOnlineRoomProject, "TrialSetting", keys[value]);
+        return menu::TranslateRtext(PROJECT, "TrialSetting", keys[value]);
     }
 
     function getCarSetTitle(id)
     {
-        return menu::TranslateRtext(RaceOnlineRoomProject, "OnlineCarSet", "TITLE_%{id}");
+        return menu::TranslateRtext(PROJECT, "OnlineCarSet", "TITLE_%{id}");
     }
 
     function writebackAndUpdateGarageCar(slot_id)
@@ -389,7 +389,7 @@ module RaceProject
     {
         if (PDINetwork.getUseNickname())
         {
-            var message = context.translate(RaceOnlineRoomProject, "OnlineMessage", "ROOM_MEMBER_JOINING")
+            var message = context.translate(PROJECT, "OnlineMessage", "ROOM_MEMBER_JOINING")
                 .build(displayName);
 
             putSystemChatMessage(context, gtengine::NoticeType::RoomMemberJoin, message, 30);
@@ -439,7 +439,7 @@ module RaceProject
                 break;
 
             case gtengine::NoticeType::PrepareRace:
-                var [byAlarm, starter] = args;
+                |var byAlarm, var starter| = args;
                 if (byAlarm)
                     message = ModeTextUtil::getNextEventText("ModeText_MESSAGE_EVENT_HAS_BEEN_STARTED_ON_TIME");
                 else
@@ -451,7 +451,7 @@ module RaceProject
                 break;
 
             case gtengine::NoticeType::BestRecordUpdated:
-                var [roomMode, driverName, score, isOverallBest] = args;
+                |var roomMode, var driverName, var score, var isOverallBest| = args;
                 var scoreString = "";
                 var unit = "";
 
@@ -467,14 +467,14 @@ module RaceProject
                 }
 
                 if (isOverallBest)
-                    scoreString = COLOR_RED + scoreString;
+                    scoreString = "\x12" + scoreString; // Red color
 
                 if (unit != "")
                     scoreString += unit;
 
                 message = manager.translate("OnlineMessage", "EVENT_BEST_RECORD_UPDATED2")
                                     .build(driverName, 
-                                    manager.translate("RaceTypeName", isOverallBest ? "OVERALL_BEST" : "INDIVIDUAL_BEST")
+                                    manager.translate("RaceTypeName", isOverallBest ? "OVERALL_BEST" : "INDIVIDUAL_BEST"),
                                     scoreString);
 
                 break;
@@ -519,7 +519,7 @@ module RaceProject
         var data = UIKitProject::SelectRoot::Data();
         data.candidates_ = list;
         data.title_ = "When?";
-        data.cb_init_item_ = (context, item, data) => 
+        data.cb_init_item_ = function(context, item, data)
         {
             item.label.text = data[1];
         };
@@ -550,14 +550,14 @@ module RaceProject
             if (OnlineSession.isSomeoneOpeningConfig(true) || !OnlineSession.requestAlterationPrivilege(3000))
             {
                 main::sound.play("disable");
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             }
 
             needReleasePrivilege = true;
         }
         else if (!alertUnableToDoExceptOwner(context))
         {
-            return STATE_YIELD;
+            return EVENTRESULT_FILTER;
         }
 
         main::sound.play("ok");
@@ -611,7 +611,7 @@ module RaceProject
 
     function onRegulationExaminationResult(context, isValid)
     {
-        RaceOnlineRoomProject::PaddockRoot.sInquireRegulationResult = isValid;
+        PROJECT::PaddockRoot.sInquireRegulationResult = isValid;
     }
 
     function onRoomOwnerChanged(context, previousOwnerId, newOwnerDisplayName, newOwnerId, isMe, cause)
@@ -733,17 +733,18 @@ module RaceProject
     function onRoomSharedDataUpdated(context, isClosed, isFull, isHidden, isNATRestricted, updated1, updated2)
     {
         if (updated1)
+            ;
+
+        if (updated2)
         {
-            if (updated2)
+            var root = sCurrentRootForNetworkEvent;
+            if (root != nil)
             {
-                var root = sCurrentRootForNetworkEvent;
-                if (root != nil)
-                {
-                    if (root.name == "PaddockRoot")
-                        root.refreshRoomInformation(context);
-                }
+                if (root.name == "PaddockRoot")
+                    root.refreshRoomInformation(context);
             }
         }
+        
     }
 
     function onChangeCourse(context, senderName, courseCode)
@@ -767,12 +768,12 @@ module RaceProject
     {
         if (requesterIndex == OnlineSession.getMyNotifierId())
         {
-            RaceOnlineRoomProject::PaddockRoot.sChangeEventSettingResult = result;
+            PROJECT::PaddockRoot.sChangeEventSettingResult = result;
         }
 
         if (!result)
         {
-            var message = manager.translate(RaceOnlineRoomProject::PaddockRoot, "YOU_CANNOT_CHANGE_REGULATION_NOW");
+            var message = manager.translate(PROJECT::PaddockRoot, "YOU_CANNOT_CHANGE_REGULATION_NOW");
             putSystemChatMessage(context, gtengine::NoticeType::RoomConfigChangeFailed, message, 30);
             return;
         }
@@ -929,7 +930,7 @@ module RaceProject
 
                 if (shuffleParameterChanged && wasIEntried)
                 {
-                    var msg = context.translate(RaceOnlineRoomProject, 
+                    var msg = context.translate(PROJECT, 
                         "OnlineMessage", "SHUFFLE_PARAMETER_CHANGED_DO_YOU_START_OVER_ENTRY_AGAIN");
                     sCancelableDialogOpening = true;
 
@@ -1025,7 +1026,7 @@ module RaceProject
         var need_result_count = 1;
         var result_count_base = 1;
 
-        var [rc, sinfo] = OnlineSession.getRoomConfig(true);
+        |var rc, var sinfo| = OnlineSession.getRoomConfig(true);
         if (rc.hasQualifier())
         {
             if (sinfo.event_phase == gtengine::EventPhase::Qualifier)
@@ -1164,9 +1165,9 @@ module RaceProject
 
     function grimKeepAliveEntry(context)
     {
-        while (true)
+        for (;;)
         {
-            var request = Grim2.requestExtendSession((args) => { });
+            var request = Grim2.requestExtendSession(function(args) { });
             var res = Grim2Util::join(context, request);
             if (!res || !Grim2.decodeResult(request))
                 res = false;
@@ -1189,9 +1190,9 @@ module RaceProject
             return;
         }
 
-        Photo.requestImage(id, (args) => 
+        Photo.requestImage(id, function(args)
         {
-            var [context, request] = args;
+            |var context, var request| = args;
             if (request.isDone())
             {
                 func(context, path);
@@ -1237,7 +1238,7 @@ module RaceProject
             rank_list.push(record[i].entry_id);
 
         var reverse = grid_type == gtengine::GridSortType::FASTEST_DOWN;
-        var cmp = (a, b) => reverse;
+        var cmp = function(a, b) { return reverse; };
         rank_list.sort(cmp);
 
         var entry_max = ORG.getEntryMaxAtCurrentRace();
@@ -1313,7 +1314,7 @@ module RaceProject
 
     function startEventPhase(context, to_race)
     {
-        var [rc, sinfo] = OnlineSession.getRoomConfig(true);
+        |var rc, var sinfo| = OnlineSession.getRoomConfig(true);
         var rp = nil;
         var grid_type = to_race ? rc.grid_sort_type : -1;
         var change_course = sNextSeries;
@@ -1544,7 +1545,7 @@ module RaceProject
 
                 do
                 {
-                    var [rc, sinfo] = OnlineSession.getRoomConfig(true);
+                    |var rc, var sinfo| = OnlineSession.getRoomConfig(true);
                     if (rc.hasQualifier())
                     {
                         sinfo.event_phase = gtengine::EventPhase::Practice;
@@ -1662,7 +1663,7 @@ module RaceProject
     }
 }
 
-module RaceOnlineRoomProject
+module PROJECT
 {
     import RaceProject::*;
     import CourseList::getCourse;

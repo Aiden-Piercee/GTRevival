@@ -12,7 +12,7 @@
 
 
 
-module RaceProject
+module PROJECT
 {
     #include "projects/gt6/race/LoadingUtil.ad"
     #include "projects/gt6/race/BoardUtil.ad"
@@ -325,7 +325,7 @@ module RaceProject
 
             sc.is_instant_replay = false;
             
-            var [bg, flag, event_text] = LaunchRaceUtil::getEventInfo(gp);
+            |var bg, var flag, var event_text| = LaunchRaceUtil::getEventInfo(gp);
             gSequenceCondition.replay_title = event_text;
         }
 
@@ -534,7 +534,7 @@ module RaceProject
         update_context.unloadGpb("%{PROJECT_ROOT_DIR}/race", "RaceProject");
         update_context.unloadGpb("%{PROJECT_ROOT_DIR}/race", "RaceProjectComponent");
 
-        SoundUtil::BGMFadeout(1f);
+        SoundUtil::BGMFadeout(1.0);
 
         ORG.setApplicationEndSessionSecond(0);
 
@@ -761,7 +761,7 @@ module RaceProject
 
         if (!gSequenceCondition.no_bgm_start)
         {
-            SoundUtil::BGMFadeout(1f);
+            SoundUtil::BGMFadeout(1.0);
             main::ORG.getRaceSound().start = false;
         }
     }
@@ -811,7 +811,7 @@ module RaceProject
             {
                 var ps = ORG.getCurrentPitStrategy(slot_id, true);
                 var cp = RaceOperator.getSlotCarParameter(slot_id);
-                var [tire_f, tire_r] = cp.getTireCategories();
+                |var tire_f, var tire_r| = cp.getTireCategories();
 
                 if ((ps.front_tire >= 0 && ps.front_tire != tire_f) ||
                     (ps.rear_tire >= 0 && ps.rear_tire != tire_r))
@@ -1044,7 +1044,7 @@ module RaceProject
             ;
         else
         {
-            var [apply_cp, apply_dp_list] = cons.apply(new_cp, new_dp);
+            |var apply_cp, var apply_dp_list| = cons.apply(new_cp, new_dp);
             new_cp = apply_cp;
             if (apply_dp_list.isInstanceOf(Array))
                 new_dp = apply_dp_list[0];
@@ -1098,7 +1098,7 @@ module RaceProject
 
     function getTireStringForReplay(cp)
     {
-        var [tire_f, tire_r] = cp.getTireCategories();
+        |var tire_f, var tire_r| = cp.getTireCategories();
         var str = TireUtil::getNameShort(tire_f) + "/" + TireUtil::getNameShort(tire_r);
         return str;
     }
@@ -1182,7 +1182,7 @@ module RaceProject
 
             if (row_count > 0)
             {
-                var [start_num, disqualify] = GAME_STATUS.user_profile.record.playlog_record.getPlayLog(event_id);
+                |var start_num, var disqualify| = GAME_STATUS.user_profile.record.playlog_record.getPlayLog(event_id);
                 Grim2Util::PUTLOG::EVENT::update(start_num, disqualify, event_id, result, time);
                 var context = manager.getUpdateContext().getRenderContext(0);
                 SaveDataUtilGT6::saveEveryWhere(context);
@@ -1234,7 +1234,7 @@ module RaceProject
 
             if (row_count > 0)
             {
-                var [start_num, disqualify] = GAME_STATUS.user_profile.record.playlog_record.getPlayLog(event_id);
+                |var start_num, var disqualify| = GAME_STATUS.user_profile.record.playlog_record.getPlayLog(event_id);
                 Grim2Util::PUTLOG::EVENT::update(start_num, disqualify, event_id, result, score);
             }
         }
@@ -1400,12 +1400,12 @@ module RaceProject
 
     function getCourseName(context, course_info)
     {
-        return context.translate(RaceProject, "CourseName", course_info.Name);
+        return context.translate(PROJECT, "CourseName", course_info.Name);
     }
 
     function getCourseCategoryStr(context, course_info)
     {
-        return context.translate(RaceProject, "CourseData", "CATEGORY_" + course_info.CourseCategory);
+        return context.translate(PROJECT, "CourseData", "CATEGORY_" + course_info.CourseCategory);
     }
 
     function getCourseCountryStr(context, course_info)
@@ -1413,7 +1413,7 @@ module RaceProject
         if (course_info.CountryFlag == "PDI")
             return "";
         else
-            return "/ " + context.translate(RaceProject, "Country", "name_" + course_info.CountryFlag)
+            return "/ " + context.translate(PROJECT, "Country", "name_" + course_info.CountryFlag)
     }
 
     function getCountryFlagImagePath(course_info)
@@ -1424,7 +1424,7 @@ module RaceProject
 
     function getRaceTypeKey(mdl, value)
     {
-        var res = mdl.find_static(pair => pair[1] == value);
+        var res = mdl.find_static(function(pair) { return pair[1] == value; });
         if (res.size <= 0)
             return "";
 
@@ -1434,7 +1434,7 @@ module RaceProject
     function getRaceTypeName(context, mdl, value)
     {
         var key = getRaceTypeKey(mdl, value);
-        return context.translate(RaceProject, "RaceTypeName", key);
+        return context.translate(PROJECT, "RaceTypeName", key);
     }
 
     function setReplayLimit()
@@ -1680,7 +1680,7 @@ module RaceProject
         if (exchange_cpdp != nil)
             exchangeCar(exchange_cpdp);
 
-        StageData::loadStageData(gSequenceCondition.gp.event.stage_data.at_quick
+        StageData::loadStageData(gSequenceCondition.gp.event.stage_data.at_quick,
             gSequenceCondition.gp.event.stage_data.layout_type_at_quick);
 
         start_session_quick_demo(context);
@@ -1767,7 +1767,7 @@ module RaceProject
             return;
         }
 
-        var [qualified, should_be, current] = await event.regulation.checkIfQualified(cp, dp);
+        |var qualified, var should_be, var current| = await event.regulation.checkIfQualified(cp, dp);
         if (qualified)
             return;
 
@@ -1998,25 +1998,26 @@ module RaceProject
             var replay_mark_id = entry["replay_mark_id"];
             if (!Replay2.isReplayMarkExist(replay_mark_id))
             {
-                var req = Replay2.requestReplayMark(replay_mark_id, () => {});
+                var req = Replay2.requestReplayMark(replay_mark_id, function() {});
                 if (!Grim2Util::joinAwait(context, req))
                     continue;
-
-                var path = Replay2.getReplayMarkPath(replay_mark_id);
-                var pathS = path + "S";
-
-                if (!pdistd::Exist(pathS))
-                {
-                    var worker = pdistd::DecryptInflateAsync(path, pathS, false);
-                    while (!worker.done)
-                        pdiext::ProcessUpdateIteration(16000);
-                }
-
-                var online_id = entry["user_id"];
-                var res = await ORG.loadMarkReplay(pathS, online_id, replay_mark_id, false);
-                if (!res)
-                    ;
             }
+            
+            var path = Replay2.getReplayMarkPath(replay_mark_id);
+            var pathS = path + "S";
+
+            if (!pdistd::Exist(pathS))
+            {
+                var worker = pdistd::DecryptInflateAsync(path, pathS, false);
+                while (!worker.done)
+                    pdiext::ProcessUpdateIteration(16000);
+            }
+
+            var online_id = entry["user_id"];
+            var res = await ORG.loadMarkReplay(pathS, online_id, replay_mark_id, false);
+            if (!res)
+                ;
+            
         }
     }
 
@@ -2110,7 +2111,7 @@ module RaceProject
         if (!gSequenceCondition.is_online)
             return "";
 
-        var [rc, sinfo] = OnlineSession.getRoomConfig(true);
+        |var rc, var sinfo| = OnlineSession.getRoomConfig(true);
         var title = rc.comment;
         if (rc.hasQualifier())
         {

@@ -11,7 +11,7 @@
 
 
 
-module SeasonalEventsRoot
+module ROOT
 {
     hidden.visible = false;
 
@@ -35,21 +35,21 @@ module SeasonalEventsRoot
         DialogUtil::openConfirmDialog(context, DialogUtil::ERROR,
             manager.translate("Network", "CANNOT_CONNECT_SERVER"));
 
-        SeasonalEventsRoot.close(context, false);
+        ROOT.close(context, false);
     }
 
     method onCancel(context, event, item)
     {
         main::sound.play("cancel");
         self.close(context, false);
-        return 2;
+        return EVENTRESULT_FILTER;
     }
 
     method onInitialize(context)
     {
-        GTModeProject.PlayMenuBGM(context, SeasonalEventsRoot);
+        PROJECT.PlayMenuBGM(context, ROOT);
         context.pushEvent(main::menu::MFunctionEvent(self.postInitialize, context));
-        return 2;
+        return EVENTRESULT_FILTER;
     }
 
     method postInitialize(context)
@@ -69,7 +69,7 @@ module SeasonalEventsRoot
         context.enableInput();
         context.filterEvent("Grim2");
 
-        return 2;
+        return EVENTRESULT_FILTER;
     }
 
     method checkPresentCondition(context)
@@ -110,7 +110,7 @@ module SeasonalEventsRoot
             }
             else
             {
-                SeasonalEventsRoot.on_error(context);
+                ROOT.on_error(context);
                 continue;
             }
 
@@ -154,7 +154,7 @@ module SeasonalEventsRoot
 
         method open(context, folder_id)
         {
-            SeasonalEventsRoot.setFocus(nil);
+            ROOT.setFocus(nil);
             self.initialize(context, folder_id);
 
             self.Fade.forward();
@@ -219,7 +219,7 @@ module SeasonalEventsRoot
 
             var type = 2;
 
-            var request = UserProfile2.requestUserSpecial(type, registration, (args) => {});
+            var request = UserProfile2.requestUserSpecial(type, registration, function(args) {});
             if (!Grim2Util::joinAwait(context, request))
                 return false;
 
@@ -249,7 +249,7 @@ module SeasonalEventsRoot
             ListBox.setItemCount(size);
 
             var focus_index = 0;
-            var event_id = GTModeProject.history['RaceEventRoot::EventId'];
+            var event_id = PROJECT.history['RaceEventRoot::EventId'];
 
             if (event_id != nil)
             {
@@ -263,12 +263,12 @@ module SeasonalEventsRoot
                     }
                 }
 
-                GTModeProject.history['RaceEventRoot::EventId'] = nil;
+                PROJECT.history['RaceEventRoot::EventId'] = nil;
             }
 
             ListBox.focus_index = focus_index;
-            SeasonalEventsRoot.setFocus(ListBox);
-            SeasonalEventsRoot.gp_list = gp_list;
+            ROOT.setFocus(ListBox);
+            ROOT.gp_list = gp_list;
 
             if (sWatcher != nil)
             {
@@ -283,16 +283,16 @@ module SeasonalEventsRoot
         {
             var me = self;
             
-            EventRace2.requestGameParameterList(folder_id, (args) =>
+            EventRace2.requestGameParameterList(folder_id, function(args)
             {
-                var [context, request] = args;
+                |var context, var request| = args;
                 if (request.isDone())
                 {
                     var xml = EventRace2.getGameParameterList(folder_id);
                     var gp_list = GameParameterUtil::parseXML(xml);
                     if (gp_list == nil || gp_list.size == 0)
                     {
-                        SeasonalEventsRoot.on_error(context);
+                        ROOT.on_error(context);
                         return;
                     }
 
@@ -304,15 +304,15 @@ module SeasonalEventsRoot
         method initializeFolderOnline(context, folder_id)
         {
             var me = self;
-            EventRace2.requestOnlineEventList2((args) =>
+            EventRace2.requestOnlineEventList2(function(args)
             {
-                var [context, request] = args;
+                |var context, var request| = args;
                 if (request.isDone())
                 {
                     var folder_list = EventRace2.decodeOnlineEventList(request);
                     if (folder_list == nil || folder_list.size == 0)
                     {
-                        SeasonalEventsRoot.on_error(context);
+                        ROOT.on_error(context);
                         return;
                     }
 
@@ -321,7 +321,7 @@ module SeasonalEventsRoot
                         if (folder["id"].toInt() != folder_id)
                             continue;
 
-                        SeasonalEventsRoot::Label.text = OnlineEventUtil::localize(folder["title"]);
+                            ROOT::Label.text = OnlineEventUtil::localize(folder["title"]);
 
                         var event_id_list = folder["event_id_list"];
                         me.initializeGameRecord(folder);
@@ -394,10 +394,10 @@ module SeasonalEventsRoot
             {
                 if (preopen_garage_id != GAME_STATUS.user_profile.garage.getRidingGarageId())
                     updateRegulations(context);
-                return 2;
+                return EVENTRESULT_FILTER;
             }
 
-            return 0;
+            return EVENTRESULT_CONTINUE;
         }
 
         method onActivate(context)
@@ -406,10 +406,10 @@ module SeasonalEventsRoot
             if (w == nil)
             {
                 sound.play("disable");
-                return 2;
+                return EVENTRESULT_FILTER;
             }
 
-            var gp = SeasonalEventsRoot.gp_list[ListBox.focus_index];
+            var gp = ROOT.gp_list[ListBox.focus_index];
             var event = gp.event;
 
             if (RaceEventUtil::checkEventBeforeOpen(context, event))
@@ -420,7 +420,7 @@ module SeasonalEventsRoot
                 var mtime_local = mtime.toLocal();
 
                 OK(context, "RaceEvent", "EVENT_NOT_OPEN", pdiext::GetDateTimeStringShort(mtime_local));
-                return 2;
+                return EVENTRESULT_FILTER;
             }
 
             sound.play("ok");
@@ -429,8 +429,8 @@ module SeasonalEventsRoot
             var res = RaceEntryRoot.modal_open_seasonal(context, gp);
             if (res)
             {
-                GTModeProject.history['RaceEventRoot::EventId'] = event.event_id;
-                GTModeProject.history['LastPageName'] = SeasonalEventsRoot.name;
+                PROJECT.history['RaceEventRoot::EventId'] = event.event_id;
+                PROJECT.history['LastPageName'] = ROOT.name;
                 self.close(context, true);
             }
             else
@@ -439,14 +439,14 @@ module SeasonalEventsRoot
                 self.updateRegulations(context);
             }
 
-            return 2;
+            return EVENTRESULT_FILTER;
         }
 
         method onCancel(context, event, item)
         {
             main::sound.play("cancel");
             self.close(context, false);
-            return 2;
+            return EVENTRESULT_FILTER;
         }
 
         module ListBox
@@ -461,9 +461,9 @@ module SeasonalEventsRoot
                 {
                     w = self.getItemWidget(i, context);
 
-                    if (i < SeasonalEventsRoot.gp_list.size)
+                    if (i < ROOT.gp_list.size)
                     {
-                        var gp = SeasonalEventsRoot.gp_list[i];
+                        var gp = ROOT.gp_list[i];
                         w.init(context, gp, i);
                     }
                     else
@@ -489,7 +489,7 @@ module SeasonalEventsRoot
                         w.focus_leave(context);
                 }
 
-                return 1;
+                return EVENTRESULT_STOP;
             }
 
             method onVisibleNotify(context, indexes)
@@ -559,6 +559,7 @@ module SeasonalEventsRoot
             switch (event.information.logo_image_layout)
             {
                 case 1:
+                default:
                     flyer_template = hidden::EventFlyerTemplate::TypeA;
                     datetime_format = "TYPE_A";
                     break;
@@ -622,7 +623,7 @@ module SeasonalEventsRoot
                     var begin_datetime = main::pdistd::MTime();
                     begin_datetime.setBySecond(event.begin_date);
 
-                    var [begin_date_srt, begin_time_srt] = GetDateTimeString(datetime_format, begin_datetime);
+                    |var begin_date_srt, var begin_time_srt| = GetDateTimeString(datetime_format, begin_datetime);
                     Flyer.StartDateTime::Text1.text = begin_date_srt;
                     Flyer.StartDateTime::Text2.text = begin_time_srt;
                 }
@@ -644,7 +645,7 @@ module SeasonalEventsRoot
                     else
                         end_datetime.setBySecond(event.end_date);
 
-                    var [end_date_srt, end_time_srt] = GetDateTimeString(datetime_format, end_datetime);
+                    |var end_date_srt, var end_time_srt| = GetDateTimeString(datetime_format, end_datetime);
                     Flyer.EndDateTime::Text1.text = end_date_srt;
                     Flyer.EndDateTime::Text2.text = end_time_srt;
                 }
@@ -742,12 +743,12 @@ module SeasonalEventsRoot
                         Flyer.ImageFace.on_delay_load_complete = nil;
                     };
 
-                    Flyer.ImageFace.on_delay_load_complete = *self.*delay_load_complete;
+                    Flyer.ImageFace.on_delay_load_complete = self.*delay_load_complete;
 
                     var path = EventRace2.getEventBgImagePath(bg_image);
-                    EventRace2.requestEventBgImage(bg_image, (args) => 
+                    EventRace2.requestEventBgImage(bg_image, function(args)
                     {
-                        var [context, request] = args;
+                        |var context, var request| = args;
                         if (request.isDone())
                         {
                             Flyer.ImageFace::FadeActor.reset();
@@ -768,7 +769,7 @@ module SeasonalEventsRoot
             {
                 var begin_datetime = main::pdistd::MTime();
                 begin_datetime.setBySecond(event.begin_date);
-                var [text1, text2] = GetDateTimeString("TYPE_B", begin_datetime);
+                |var text1, var text2| = GetDateTimeString("TYPE_B", begin_datetime);
                 self.ComingSoon::StartDateTime::Text1.text = text1;
                 self.ComingSoon::StartDateTime::Text2.text = text2;
             }

@@ -1,44 +1,13 @@
 
 module RunViewerProjectComponent::DialogParts::Pulldown
 {
-    module label
-    {
-        method onRealize()
-        {
-            if (pdiext::MSystemConfiguration::isSDTV())
-            {
-                self.scale_x = 2.4f;
-                self.scale_y = 2.4f;
-            }
-        }
-    }
+    SCALE_WIDGET_SDTV(label, 2.4);
 }
 
 module RunViewerProjectComponent::DialogParts::Pulldown::OptionMenu
 {
-    module label
-    {
-        method onRealize()
-        {
-            if (pdiext::MSystemConfiguration::isSDTV())
-            {
-                self.scale_x = 2.4f;
-                self.scale_y = 2.4f;
-            }
-        }
-    }
-
-    module label_i
-    {
-        method onRealize()
-        {
-            if (pdiext::MSystemConfiguration::isSDTV())
-            {
-                self.scale_x = 2.4f;
-                self.scale_y = 2.4f;
-            }
-        }
-    }
+    SCALE_WIDGET_SDTV(label, 2.4);
+    SCALE_WIDGET_SDTV(label_i, 2.4);
 
     attribute decide_callback;
 
@@ -85,226 +54,30 @@ module RunViewerProjectComponent::DialogParts::Pulldown::OptionMenu
 
 module RunViewerProjectComponent::DialogParts::PulldownItem
 {
-    module label
-    {
-        method onRealize()
-        {
-            if (pdiext::MSystemConfiguration::isSDTV())
-            {
-                self.scale_x = 2.4f;
-                self.scale_y = 2.4f;
-            }
-        }
-    }
-
-    module label_i
-    {
-        method onRealize()
-        {
-            if (pdiext::MSystemConfiguration::isSDTV())
-            {
-                self.scale_x = 2.4f;
-                self.scale_y = 2.4f;
-            }
-        }
-    }
+    SCALE_WIDGET_SDTV(label, 2.4);
+    SCALE_WIDGET_SDTV(label_i, 2.4);
 }
 
 module RunViewerProjectComponent::ButtonHelp::ButtonHelpGT6
 {
     module hidden::ButtonSet
     {
-        module Circle::label
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module Circle::labeli
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module Square::label
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module Square::labeli
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module Triangle::label
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module Triangle::labeli
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module Cross::label
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module Cross::labeli
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module R1::label
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module R1::labeli
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module L1::label
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module L1::labeli
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module R2::label
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module R2::labeli
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module L2::label
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module L2::labeli
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
+        SCALE_WIDGET_SDTV(Circle::label, 2.4);
+        SCALE_WIDGET_SDTV(Circle::labeli, 2.4);
+        SCALE_WIDGET_SDTV(Square::label, 2.4);
+        SCALE_WIDGET_SDTV(Square::labeli, 2.4);
+        SCALE_WIDGET_SDTV(Triangle::label, 2.4);
+        SCALE_WIDGET_SDTV(Triangle::labeli, 2.4);
+        SCALE_WIDGET_SDTV(Cross::label, 2.4);
+        SCALE_WIDGET_SDTV(Cross::labeli, 2.4);
+        SCALE_WIDGET_SDTV(R1::label, 2.4);
+        SCALE_WIDGET_SDTV(R1::labeli, 2.4);
+        SCALE_WIDGET_SDTV(L1::label, 2.4);
+        SCALE_WIDGET_SDTV(L1::labeli, 2.4);
+        SCALE_WIDGET_SDTV(R2::label, 2.4);
+        SCALE_WIDGET_SDTV(R2::labeli, 2.4);
+        SCALE_WIDGET_SDTV(L2::label, 2.4);
+        SCALE_WIDGET_SDTV(L2::labeli, 2.4);
     }
 
     method clear()
@@ -391,7 +164,7 @@ module RunViewerProjectComponent::ButtonHelp::ButtonHelpGT6
         var order_list = [];
         foreach (var set in set_list)
         {
-            var [button_name, text] = set;
+            |var button_name, var text| = set;
             if (button_name == "Enter")
             {
                 if (text == nil)
@@ -507,17 +280,7 @@ module RunViewerProjectComponent::ButtonHelp::ButtonHelpGT6
 
 module RunViewerProjectComponent::Tooltip::HDToolTip
 {
-    module tip
-    {
-        method onRealize()
-        {
-            if (pdiext::MSystemConfiguration::isSDTV())
-            {
-                    self.scale_x = 2.6f;
-                    self.scale_y = 2.6f;
-            }
-        }
-    }
+    SCALE_WIDGET_SDTV(tip, 2.4);
 }
 
 module RunViewerProjectComponent::HDSlider::slider
@@ -545,16 +308,16 @@ module RunViewerProjectComponent::HDSlider::slider
         if (pdiext::MSystemConfiguration::isSDTV())
         {
             var pup = self["popup"];
-            label.scale_x = 2.4f;
-            label.scale_y = 2.4f;
-            labeli.scale_x = 2.4f;
-            labeli.scale_y = 2.4f;
-            pup.min.scale_x = 2.4f;
-            pup.min.scale_y = 2.4f;
-            pup.max.scale_x = 2.4f;
-            pup.max.scale_y = 2.4f;
-            pup.Value.label.scale_x = 2.4f;
-            pup.Value.label.scale_y = 2.4f;
+            label.scale_x = 2.4;
+            label.scale_y = 2.4;
+            labeli.scale_x = 2.4;
+            labeli.scale_y = 2.4;
+            pup.min.scale_x = 2.4;
+            pup.min.scale_y = 2.4;
+            pup.max.scale_x = 2.4;
+            pup.max.scale_y = 2.4;
+            pup.Value.label.scale_x = 2.4;
+            pup.Value.label.scale_y = 2.4;
             pup.Value.label.adjust_scale = false;
             pup.base.pack_fill_x = false;
             pup.min.adjust_scale = false;
@@ -627,11 +390,11 @@ module RunViewerProjectComponent::HDSlider::slider
     method on_step_changed()
     {
         var x = self.value - self.repeat_start;
-        x /= 4f;
-        if (x < 0f)
+        x /= 4.0;
+        if (x < 0.0)
             x = -x;
-        if (x < 1f)
-            x = 1f;
+        if (x < 1.0)
+            x = 1.0;
         if (x > self.step_thr)
             x = self.step_thr;
         self.step = x;
@@ -681,7 +444,7 @@ module RunViewerProjectComponent::HDSlider::slider
     method sliderValueChanged(context)
     {
         var pup = self["popup"];
-        var ratio = 0f;
+        var ratio = 0.0;
         var range = self.display_max - self.display_min;
         var bar_w = self.index - self.display_min;
         if (bar_w != 0 && range != 0)

@@ -12,16 +12,16 @@
 
 
 
-module RaceRoot
+module ROOT
 {
     #include "projects/gt6/race/ButtonNavigation.ad"
     #include "projects/gt6/race/KeyboardSwitcher.ad"
 
     hidden.visible = false;
 
-    static sColorGray = menu::MColorObject(51f / 255f, 51f / 255f, 51f / 255f);
-    static sColorRed = menu::MColorObject(1f, 0f, 0f);
-    static sColorGreen = menu::MColorObject(74f / 255f, 249f / 255f, 135f / 255f);
+    static sColorGray = menu::MColorObject(51.0 / 255.0, 51.0 / 255.0, 51.0 / 255.0);
+    static sColorRed = menu::MColorObject(1.0, 0.0, 0.0);
+    static sColorGreen = menu::MColorObject(74.0 / 255.0, 249.0 / 255.0, 135.0 / 255.0);
     
     static sVersionBranch;
     static sWindowMax;
@@ -106,7 +106,7 @@ module RaceRoot
 
     method resetDisplay(context)
     {
-        RaceRoot.visible = true;
+        ROOT.visible = true;
         Info::CountDown.visible = false;
         OnboardMeterRoot::GT6::Common::OverallBest.visible = false;
         OnboardMeterRoot::GT6::Common::PitConstraint.visible = false;
@@ -114,9 +114,9 @@ module RaceRoot
         var SS = Info::StartSignal;
         SS.ScalarInterpolator.stop();
         SS.VectorInterpolator.stop();
-        SS.opacity = 1f;
-        SS.scale_x = 1f;
-        SS.scale_y = 1f;
+        SS.opacity = 1.0;
+        SS.scale_x = 1.0;
+        SS.scale_y = 1.0;
 
         var SSH = SS.HBox;
         SSH.Signal1.Led.setColor(sColorGray);
@@ -143,11 +143,11 @@ module RaceRoot
         while (nowFinalizeSequence)
             yield;
 
-        ORG.setEffectFader(1f);
+        ORG.setEffectFader(1.0);
 
         ButtonNavigation::initialize(context, getPlayerDriver() == nil || !getPlayerDriver().manual);
 
-        ORG.setEventCallback(context, RaceRoot);
+        ORG.setEventCallback(context, ROOT);
 
         self.createPauseMenu(context);
 
@@ -190,25 +190,25 @@ module RaceRoot
         if (!gSequenceCondition.isDemo())
             resetTarget();
         
-        var chat_input_list = [RaceProject::RaceRoot::ChatInput];
+        var chat_input_list = [PROJECT::ROOT::ChatInput];
         if (UIKitProject::MessengerRoot.defined('ChatInput'))
             chat_input_list.push(UIKitProject::MessengerRoot::ChatInput);
 
         foreach (var chat_input in chat_input_list)
         {
             chat_input.visible = false;
-            if (chat_input.x < 160f)
-                chat_input.x = 160f;
+            if (chat_input.x < 160.0)
+                chat_input.x = 160.0;
 
             if (context.class_id.defined('osk_screen_height'))
             {
-                var h = 56f;
+                var h = 56.0;
                 if (context.osk_display_height < 720)
-                    h = 33f;
+                    h = 33.0;
                 else if (context.osk_display_height < 1080)
-                    h = 45f;
+                    h = 45.0;
 
-                var s = 1080f / context.osk_screen_height.toFloat();
+                var s = 1080.0 / context.osk_screen_height.toFloat();
                 chat_input.h = h * s;
             }
         }
@@ -224,7 +224,7 @@ module RaceRoot
                 gSequenceCondition.enable_starting_grid);
         }
 
-        RaceRoot.visible = true;
+        ROOT.visible = true;
 
         if (ORG.isRestartSequence() == false)
             OnboardMeterRoot.visible = true;
@@ -232,15 +232,15 @@ module RaceRoot
         ORG.getRaceSound().start = true;
 
         if (PluginModule.defined("onRaceRootInitialize"))
-            PluginModule::onRaceRootInitialize(context, RaceRoot);
+            PluginModule::onRaceRootInitialize(context, ROOT);
 
         while (ORG.setEventSignalWait(false) == false)
             yield;
 
-        resetFocus(RaceRoot);
+        resetFocus(ROOT);
 
-        RaceRoot.sNormalFinish = false;
-        RaceRoot.sLastConditionSatisfied = false;
+        ROOT.sNormalFinish = false;
+        ROOT.sLastConditionSatisfied = false;
 
         if (AppOpt.defined("autorun_viewchange"))
             sViewChangeWatcher = WatcherUtil::Create(context, view_change_tick, 60 * 5);
@@ -405,7 +405,7 @@ module RaceRoot
 
         var rp = ORG.getBackRaceParameter();
         if (rp.enable_pilot_commander)
-            ORG.changeSpectatorCamera(gtengine::CameraType::DESIGNER, 0;)
+            ORG.changeSpectatorCamera(gtengine::CameraType::DESIGNER, 0);
     }
 
     function initialize_messenger(context)
@@ -517,7 +517,7 @@ module RaceRoot
                 ;
         }
 
-        return 2;
+        return EVENTRESULT_FILTER;
     }
 
     method onTextInput(context, event)
@@ -528,7 +528,7 @@ module RaceRoot
         Lobby.sendRoomChatMessageAsync(event.text);
 
         OSKUtil::closeChatDialog(context);
-        return 1;
+        return EVENTRESULT_STOP;
     }
 
     function StartChat(context, widget, pad)
@@ -543,7 +543,7 @@ module RaceRoot
         {
             sCancelableDialogOpening = true;
             DialogUtil::openConfirmDialog(context, DialogUtil::ERROR, 
-                context.translate(RaceRoot, "OnlineMessage", "UNABLE_TO_CHAT_DUE_TO_RESTRICTION"));
+                context.translate(ROOT, "OnlineMessage", "UNABLE_TO_CHAT_DUE_TO_RESTRICTION"));
             sCancelableDialogOpening = false;
             return;
         }
@@ -553,7 +553,7 @@ module RaceRoot
         OnlineSession.updateMemberState(gtengine::RoomMemberState::Chat, true);
 
         if (widget != nil)
-            RaceRoot.setFocus(widget);
+            ROOT.setFocus(widget);
 
         if (widget == nil)
         {
@@ -571,7 +571,7 @@ module RaceRoot
             }
 
             chat_input.visible = !pad;
-            OSKUtil::openChatDialog(context, RaceProject::RaceRoot::ChatInput, !pad);
+            OSKUtil::openChatDialog(context, PROJECT::ROOT::ChatInput, !pad);
             chat_input.visible = false;
 
             if (w == 640 && h == 480)
@@ -583,7 +583,7 @@ module RaceRoot
         }
         else
         {
-            var chat_input = RaceProject::RaceRoot::ChatInput;
+            var chat_input = PROJECT::ROOT::ChatInput;
             chat_input.visible = !pad;
             OSKUtil::openChatDialog(context, chat_input, !pad);
             chat_input.visible = false;
@@ -707,7 +707,7 @@ module RaceRoot
             if (is_livetiming)
                 LiveTimingRoot.finalize(context);
             else
-                LiveTimingRoot.initialize(context, RaceRoot::LTBase);
+                LiveTimingRoot.initialize(context, ROOT::LTBase);
         }
         else if (event.keysym == CELL_PAD_CTRL_R1)
         {
@@ -724,16 +724,17 @@ module RaceRoot
                     mode = "time_lap";
                 else if (racedisplay.carmeter_disp)
                     mode = "meter";
-
-                var map = [
-                    "nothing" : "all",
-                    "all" : "time_lap",
-                    "time_lap" : "meter",
-                    "meter" : "nothing"
-                ];
-
-                KeyboardSwitcher::changeInfo(context, map[mode]);
             }
+
+            var map = [
+                "nothing" : "all",
+                "all" : "time_lap",
+                "time_lap" : "meter",
+                "meter" : "nothing"
+            ];
+
+            KeyboardSwitcher::changeInfo(context, map[mode]);
+            
         }
         else if (event.keysym == CELL_PAD_CTRL_TRIANGLE)
         {
@@ -787,13 +788,13 @@ module RaceRoot
                     
                     if (activate_chat)
                         StartChat(context, nil, false);
-                    return 2;
+                    return EVENTRESULT_FILTER;
                 }
 
-                return 0;
+                return EVENTRESULT_CONTINUE;
             }
             else
-                return 2;
+                return EVENTRESULT_FILTER;
         }
         else if (ORG.inSession())
         {
@@ -830,16 +831,16 @@ module RaceRoot
             if ((event.port_state & 0x10) == 0)
             {
                 if (KeyboardSwitcher::onKeyPress(context, event))
-                    return 2;
+                    return EVENTRESULT_FILTER;
             }
 
             if (LeaveDetectUtil::activated(context, event))
-                return 2;
+                return EVENTRESULT_FILTER;
 
             if (is_autodemo && !is_runviewer && !is_behavior)
             {
                 self.quit(context);
-                return 2;
+                return EVENTRESULT_FILTER;
             }
             
             if (!gSequenceCondition.disable_replay_menu &&
@@ -849,13 +850,13 @@ module RaceRoot
                 if (ORG.pauseRace || ORG.isTargetCarPitIn())
                 {
                     main::sound.play("disable");
-                    return 2;
+                    return EVENTRESULT_FILTER;
                 }
 
                 if (!is_livetiming)
                     ORG.callDriversViewChange();
 
-                return 2;
+                return EVENTRESULT_FILTER;
             }
 
             if (gSequenceCondition.is_spectator_mode && !gSequenceCondition.is_instant_replay)
@@ -868,7 +869,7 @@ module RaceRoot
                     ORG.getCameraType() != gtengine::CameraType::PREVIEW)
                 {
                     ORG.callDriversViewChange();
-                    return 2;
+                    return EVENTRESULT_FILTER;
                 }
 
                 if ((event.port_state & 0x10) == 0)
@@ -878,13 +879,13 @@ module RaceRoot
                         if (event.keysym >= 0x20 && event.keysym <= 0xBF)
                         {
                             StartChat(context, event.widget, false);
-                            return 2;
+                            return EVENTRESULT_FILTER;
                         }
                     }
                 }
             }
 
-            return 0;
+            return EVENTRESULT_CONTINUE;
         }
     }
 
@@ -919,7 +920,7 @@ module RaceRoot
             PluginModule::onAfterSession(context);
 
         writebackParameter();
-        CheckTrophy::checkAfterRace(RaceRoot.sLastConditionSatisfied);
+        CheckTrophy::checkAfterRace(ROOT.sLastConditionSatisfied);
     }
 
     // Quits the race
@@ -933,7 +934,7 @@ module RaceRoot
         if (PluginModule.defined("onQuitCalled"))
             PluginModule::onQuitCalled(context);
 
-        SoundUtil::BGMFadeout(1f);
+        SoundUtil::BGMFadeout(1.0);
         ORG.getRaceSound().start = false;
         
         if (context.active_root_transition == nil)
@@ -991,7 +992,7 @@ module RaceRoot
 
         main::ORG.clearEventCallback();
 
-        SoundUtil::BGMFadeout(1f);
+        SoundUtil::BGMFadeout(1.0);
         ORG.getRaceSound().start = false;
 
         OnboardMeterRoot.activeFlyingAlert(false);
@@ -1007,7 +1008,7 @@ module RaceRoot
 
         main::ORG.pauseRace = true;
 
-        Thread::Sleep(0.1f);
+        Thread::Sleep(0.1);
 
         if (PluginModule.defined("onAfterRace"))
             PluginModule::onAfterRace(context);
@@ -1038,7 +1039,7 @@ module RaceRoot
         context.cursor_visible = false;
 
         RaceMenuUtil::hideAction();
-        resetFocus(RaceRoot);
+        resetFocus(ROOT);
         RaceMenuUtil::disableFocus(context);
     }
 
@@ -1079,7 +1080,7 @@ module RaceRoot
 
         OnboardMeterRoot.appearPanel();
 
-        resetFocus(RaceRoot);
+        resetFocus(ROOT);
 
         SoundUtil::BGMPause(false);
 
@@ -1262,7 +1263,7 @@ module RaceRoot
             return;
 
         if (!change_course)
-            RaceRoot.restart(context);
+            ROOT.restart(context);
     }
 
     method onPreTimeLimit(context, limit_frame, elapsed_frame)
@@ -1414,7 +1415,7 @@ module RaceRoot
                     if (sAlreadyQuited)
                         break;
 
-                    Thread::Sleep(0.1f);
+                    Thread::Sleep(0.1);
                 }
 
                 ORG.disableSoundingRace();
@@ -1447,13 +1448,13 @@ module RaceRoot
             if (rp.pit_constraint > 0)
             {
                 UIKitProject::MessengerRoot.putSystemChatMessage(context, gtengine::NoticeType::PitConstraint,
-                    context.translate(RaceRoot, "PIT_CONSTRAINT").build(rp.pit_constraint), 30);
+                    context.translate(ROOT, "PIT_CONSTRAINT").build(rp.pit_constraint), 30);
             }
 
             if (rp.need_tire_change)
             {
                 UIKitProject::MessengerRoot.putSystemChatMessage(context, gtengine::NoticeType::NeedTireChange,
-                    context.translate(RaceRoot, "NEED_TIRE_CHANGE"), 30);
+                    context.translate(ROOT, "NEED_TIRE_CHANGE"), 30);
             }
         }
     }
@@ -1763,7 +1764,7 @@ module RaceRoot
 
         if (is_target)
         {
-            RaceRoot.sLastConditionSatisfied = !is_forced;
+            ROOT.sLastConditionSatisfied = !is_forced;
             setSplitTripByDrivers(slot_id);
 
             if (gSequenceCondition.is_online)
@@ -1775,7 +1776,7 @@ module RaceRoot
             var display_name = ORG.getDriverDisplayName(slot_id);
             if (display_name != nil)
             {
-                var message = context.translate(RaceRoot, "AFTER_PENALTY").build(display_name, penalty_time);
+                var message = context.translate(ROOT, "AFTER_PENALTY").build(display_name, penalty_time);
                 UIKitProject::MessengerRoot.putSystemChatMessage(context, gtengine::NoticeType::AfterPenalty, message, 20);
             }
         }
@@ -1801,7 +1802,7 @@ module RaceRoot
             var use_report = Grim2.getServerOptionToInt("gt", "disqualify_report", 1);
             if (use_report)
             {
-                var [start_num, disqualify] = GAME_STATUS.user_profile.record.playlog_record.getPlayLog(event_id);
+                |var start_num, var disqualify| = GAME_STATUS.user_profile.record.playlog_record.getPlayLog(event_id);
                 Grim2Util::PUTLOG::EVENT::disqualify(disqualify, event_id, pos_x, pos_z);
             }
         }
@@ -1916,8 +1917,8 @@ module RaceRoot
 
     method onRunOutReplayBuffer(context, run_out_frame, slot_id, pilot_id)
     {
-        UIKitProject::MessengerRoot.putSystemChatMessage(context, gtengine::NoticeType::ReplayRecordEnd
-            context.translate(RaceRoot, "RECORD_END"), 30);
+        UIKitProject::MessengerRoot.putSystemChatMessage(context, gtengine::NoticeType::ReplayRecordEnd,
+            context.translate(ROOT, "RECORD_END"), 30);
     }
 
     method onThislapInvalid(context, reason, slot_id)
@@ -1925,7 +1926,7 @@ module RaceRoot
         if (gSequenceCondition.is_buffer_replay_mode)
             return;
 
-        OnboardMeterRoot.InvalidTimeMessage(reason, 3f);
+        OnboardMeterRoot.InvalidTimeMessage(reason, 3.0);
     }
 
     method onNextlapInvalid(context, reason, slot_id)
@@ -1933,20 +1934,20 @@ module RaceRoot
         if (gSequenceCondition.is_buffer_replay_mode)
             return;
 
-        OnboardMeterRoot.InvalidTimeMessage(reason, 5f, true);
+        OnboardMeterRoot.InvalidTimeMessage(reason, 5.0, true);
     }
 
     function onRankingUpdate(context, rank)
     {
-        var msg = context.translate(RaceRoot, "RANKING_UPDATE_MESSAGE") + "\n";
-        msg += context.translate(RaceRoot, "RANKING_AT_WORLD").build(rank);
+        var msg = context.translate(ROOT, "RANKING_UPDATE_MESSAGE") + "\n";
+        msg += context.translate(ROOT, "RANKING_AT_WORLD").build(rank);
 
         UIKitProject::MessengerRoot.putSystemChatMessage(context, gtengine::NoticeType::TemporaryRanking, msg);
     }
 
     function onTropyGetMessage(context, result)
     {
-        OnboardMeterRoot.PrizeMessage(result, 3f);
+        OnboardMeterRoot.PrizeMessage(result, 3.0);
     }
 
     function checkTrophyGetMessage(context, score)
@@ -1977,11 +1978,11 @@ module RaceRoot
 
         var msg = nil;
         if (eve_rank != 0)
-            msg = context.translate(RaceRoot, "TEMP_RANKING_EVENT").build(eve_rank);
+            msg = context.translate(ROOT, "TEMP_RANKING_EVENT").build(eve_rank);
         else if (all_rank == 0)
-            msg = context.translate(RaceRoot, "TEMP_RANKING_CAR").build(car_rank);
+            msg = context.translate(ROOT, "TEMP_RANKING_CAR").build(car_rank);
         else
-            msg = context.translate(RaceRoot, "TEMP_RANKING_ALL").build(car_rank, all_rank);
+            msg = context.translate(ROOT, "TEMP_RANKING_ALL").build(car_rank, all_rank);
 
         UIKitProject::MessengerRoot.putSystemChatMessage(context, gtengine::NoticeType::TemporaryRanking, msg);
     }
@@ -1995,7 +1996,7 @@ module RaceRoot
         }
 
         sIsRestarting = true;
-        SequenceUtil::startPage(context, OnboardMeterRoot, RaceRoot);
+        SequenceUtil::startPage(context, OnboardMeterRoot, ROOT);
     }
 
     method debugcamera(context)
@@ -2030,7 +2031,7 @@ module RaceRoot
     method onContinue(context)
     {
         if (!RaceMenuUtil::activated())
-            return 2;
+            return EVENTRESULT_FILTER;
 
         main::sound.play("ok");
 
@@ -2038,18 +2039,18 @@ module RaceRoot
             UIKitProject::MessengerRoot.hideWindow();
 
         closePauseMenu(context);
-        return 2;
+        return EVENTRESULT_FILTER;
     }
 
     method onRestart(context)
     {
         if (!RaceMenuUtil::activated())
-            return 2;
+            return EVENTRESULT_FILTER;
 
         if (checkRemainTime())
         {
             main::sound.play("disable");
-            return 2;
+            return EVENTRESULT_FILTER;
         }
 
         main::sound.play("ok");
@@ -2058,27 +2059,28 @@ module RaceRoot
             gSequenceCondition.game_mode == gtengine::GameMode::ONLINE_SINGLE_RACE)
         {
             if (!DialogUtil::openConfirmDialog(context, DialogUtil::DEFAULT_NO, 
-                context.translate(RaceRoot, "DO_YOU_WANT_TO_RESTART")))
-                return 2;
+                context.translate(ROOT, "DO_YOU_WANT_TO_RESTART")))
+
+            return EVENTRESULT_FILTER;
         }
 
         ORG.pauseHandleAvailable = false;
         SoundUtil::BGMStop();
         RaceMenuUtil::closeAction(context);
-        RaceRoot.restart(context);
-        return 2;
+        ROOT.restart(context);
+        return EVENTRESULT_FILTER;
     }
 
     method onChat(context)
     {
         StartChat(context, nil, true);
-        return 2;
+        return EVENTRESULT_FILTER;
     }
 
     method onDriverChange(context)
     {
         if (!RaceMenuUtil::activated())
-            return 2;
+            return EVENTRESULT_FILTER;
 
         var slot_id = RaceOperator.getPlayerSlot();
         var idx = main::ORG.getRidingDriverIndex(slot_id);
@@ -2086,13 +2088,13 @@ module RaceRoot
 
         main::ORG.setRidingDriverIndex(slot_id, idx);
         closePauseMenu(context);
-        return 2;
+        return EVENTRESULT_FILTER;
     }
 
     method onQuickOptionMenu(context)
     {
         if (!RaceMenuUtil::activated())
-            return 2;
+            return EVENTRESULT_FILTER;
 
         ORG.pauseHandleAvailable = false;
 
@@ -2120,7 +2122,7 @@ module RaceRoot
             GAME_STATUS.user_profile.option.meter_color_index,
             GAME_STATUS.user_profile.option.dial_color_index);
         ORG.pauseHandleAvailable = true;
-        return 2;
+        return EVENTRESULT_FILTER;
     }
 
     method onForceFinish(context)
@@ -2142,30 +2144,30 @@ module RaceRoot
 
         var result = UIKitProject::SelectRoot.open(context, data);
         if (result == nil)
-            return 2;
+            return EVENTRESULT_FILTER;
 
         var rank = result[0];
         ORG.forceFinishRace(getPlayerSlot(0), rank);
         RaceMenuUtil::setFocus(context, 0);
         closePauseMenu(context);
-        return 2;
+        return EVENTRESULT_FILTER;
     }
 
     method onWarpToLast(context)
     {
         var course_length = ORG.getCourseLength();
-        var target_v = course_length * 0.95f;
+        var target_v = course_length * 0.95;
         if (target_v < course_length - 500)
             target_v = course_length - 500;
 
         var s = context.getUpdateContext().getPadButtonState(0);
         if (s & 0x800)
-            target_v = course_length * 0.92f;
+            target_v = course_length * 0.92;
 
         ORG.replaceVehicle(getPlayerSlot(0), 0, target_v, true);
         RaceMenuUtil::setFocus(context, 0);
         closePauseMenu(context);
-        return 2;
+        return EVENTRESULT_FILTER;
     }
 
     method onExit(context)
@@ -2179,7 +2181,7 @@ module RaceRoot
         if (checkRemainTime())
         {
             main::sound.play("disable");
-            return 2;
+            return EVENTRESULT_FILTER;
         }
 
         if (PluginModule.defined("onExit"))
@@ -2191,7 +2193,7 @@ module RaceRoot
             main::sound.play("ok");
             OnboardMeterRoot::RaceDisplayFace.toStop();
             RaceMenuUtil::closeAction(context);
-            RaceRoot.quit(context);
+            ROOT.quit(context);
         }
 
         SoundUtil::StopStream(context);
@@ -2204,7 +2206,7 @@ module RaceRoot
         else
             quit(context);
 
-        return 2;
+        return EVENTRESULT_FILTER;
     }
 
     method canRaceStart()
@@ -2221,7 +2223,7 @@ module RaceRoot
 
         if (!gSequenceCondition.isASpecPlaying())
         {
-            RaceMenuUtil::create(context, RaceRoot, Template::RaceMenu, nil, "QuickMenu"
+            RaceMenuUtil::create(context, ROOT, Template::RaceMenu, nil, "QuickMenu",
                 nil, nil, true);
         }
         else
@@ -2295,12 +2297,12 @@ module RaceRoot
 
             icons.push(RaceMenuUtil::Icon("EXIT", "icon_exit.dds", onExit));
 
-            RaceMenuUtil::create(context, RaceRoot, Template::RaceMenu, icons, "QuickMenu"
+            RaceMenuUtil::create(context, ROOT, Template::RaceMenu, icons, "QuickMenu",
                 nil, icons.size, true);
-
-            RaceMenuUtil::hideAction(true);
-            RaceMenuUtil::disableFocus(context);
         }
+
+        RaceMenuUtil::hideAction(true);
+        RaceMenuUtil::disableFocus(context);
     }
 
     method removePauseMenu(context)
@@ -2346,7 +2348,7 @@ module RaceRoot
     method startLeaveDetect(context)
     {
         var key_list = [CELL_PAD_CTRL_L3_LEFT, CELL_PAD_CTRL_L3_RIGHT, CELL_PAD_CTRL_CROSS];
-        LeaveDetectUtil::begin(context, 3.5f, self, self.onLeaveDetectToHideMenu, self.onActivateDetectToAppearMenu, false, key_list);
+        LeaveDetectUtil::begin(context, 3.5, self, self.onLeaveDetectToHideMenu, self.onActivateDetectToAppearMenu, false, key_list);
     }
 
     method endLeaveDetect(context)
@@ -2372,13 +2374,13 @@ module RaceRoot
         if (eval_condition.type == gtengine::EvalType::ORDER)
         {
             if (eval_condition.gold != 0)
-                [gold, gold_unit] = OrdinalUtil::getOrdinalNumberSeparate(eval_condition.gold.toInt());
+                |gold, gold_unit| = OrdinalUtil::getOrdinalNumberSeparate(eval_condition.gold.toInt());
             
             if (eval_condition.silver != 0)
-                [silver, silver_unit] = OrdinalUtil::getOrdinalNumberSeparate(eval_condition.silver.toInt());
+                |silver, silver_unit| = OrdinalUtil::getOrdinalNumberSeparate(eval_condition.silver.toInt());
 
             if (eval_condition.bronze != 0)
-                [bronze, bronze_unit] = OrdinalUtil::getOrdinalNumberSeparate(eval_condition.bronze.toInt());
+                |bronze, bronze_unit| = OrdinalUtil::getOrdinalNumberSeparate(eval_condition.bronze.toInt());
         }
         else
         {
@@ -2551,7 +2553,7 @@ module RaceRoot
 
             case gtengine::LicenseDisplayModeType::FUEL_DIST:
                 if (score != -1)
-                    [text, unit] = getClearLengthString(score);
+                    |text, unit| = getClearLengthString(score);
                 break;
 
             default:

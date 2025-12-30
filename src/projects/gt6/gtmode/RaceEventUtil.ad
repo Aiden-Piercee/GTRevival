@@ -258,7 +258,7 @@ module RaceEventUtil
 
         foreach (var category in needs)
         {
-            var res = gtengine::CarCategory.find_static(pair => pair[1] == category);
+            var res = gtengine::CarCategory.find_static(function(pair) { return pair[1] == category; });
             if (res.size > 0)
             {
                 var name = res[0][0];
@@ -357,7 +357,7 @@ module RaceEventUtil
 
         foreach (var drive_train in needs)
         {
-            var res = gtengine::DriveTrainType.find_static(pair => pair[1] == drive_train);
+            var res = gtengine::DriveTrainType.find_static(function(pair) { return pair[1] == drive_train; });
             if (res.size > 0)
             {
                 var name = res[0][0];
@@ -377,7 +377,7 @@ module RaceEventUtil
 
         foreach (var aspiration in needs)
         {
-            var res = gtengine::AspirationType.find_static(pair => pair[1] == aspiration);
+            var res = gtengine::AspirationType.find_static(function(pair) { return pair[1] == aspiration; });
             if (res.size > 0)
             {
                 var name = res[0][0];
@@ -520,7 +520,7 @@ module RaceEventUtil
             {
                 var list = [];
                 var label0 = label;
-                foreach (var [text, violation] in result)
+                foreach (|var text, var violation| in result)
                 {
                     list.push(Data(label0, text, nil, violation));
                     label0 = "";
@@ -712,10 +712,10 @@ module RaceEventUtil
                 var event_result = GAME_STATUS.user_profile.record.event_record.getEventResult(event.event_id);
                 if (event_result != -1 && event_result <= i)
                     reward_status = true;
-
-                var entry = Data(manager.translate("RaceEvent", rank), cr + pdiext::GetMoneyString(prize), image_path, false, reward_status, rewardcheck_visible);
-                result.push(entry);
             }
+
+            var entry = Data(manager.translate("RaceEvent", rank), cr + pdiext::GetMoneyString(prize), image_path, false, reward_status, rewardcheck_visible);
+            result.push(entry);
         }
 
         return result;
@@ -729,7 +729,7 @@ module RaceEventUtil
         for (var i = 0; i < present_list.size && i < 3; ++i)
         {
             var present = present_list[i];
-            var [item_name, paint_id, car_label] = getPresentInfo(present);
+            |var item_name, var paint_id, var car_label| = getPresentInfo(present);
             if (item_name == "")
                 continue;
 
@@ -826,7 +826,7 @@ module RaceEventUtil
         for (var i = 0; i < present_list.size && i < 3; ++i)
         {
             var present = present_list[i];
-            var [item_name, paint_id, car_label] = getPresentInfo(present);
+            |var item_name, var paint_id, var car_label| = getPresentInfo(present);
 
             if (item_name == "")
                 continue;
@@ -1039,7 +1039,7 @@ module RaceEventUtil
 
             case gtengine::LicenseDisplayModeType::FUEL_DIST:
                 if (score != -1)
-                    [text, unit] = getClearLengthString(score);
+                    |text, unit| = getClearLengthString(score);
                 break;
 
             default:
@@ -1239,7 +1239,7 @@ module RaceEventUtil
         }
 
         var regulation = event.regulation;
-        var [qualified, should_be, current] = regulation.checkIfQualifiedCar(riding_car, false);
+        |var qualified, var should_be, var current| = regulation.checkIfQualifiedCar(riding_car, false);
         if (!qualified)
             *text = manager.translate("QuickMenu", "REGULATION_DISQUALIFIED");
 
@@ -1248,7 +1248,7 @@ module RaceEventUtil
 
     function checkEventBeforeOpen(context, event, verbose = false)
     {
-        if (GTModeProject::IsDevelop(context))
+        if (PROJECT::IsDevelop(context))
         {
             var state = context.getUpdateContext().getPadButtonState(0);
             if (state & 0x800)

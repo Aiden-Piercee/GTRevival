@@ -99,12 +99,12 @@ module LobbyUtil
             }
 
             if (error != pdistd::LobbyError::None)
+                ;
+            
+            foreach (var c in self.callbackList)
             {
-                foreach (var c in self.callbackList)
-                {
-                    if (c.type == type && c.func != nil)
-                        c.func(context, type, error, requestId, c.arg, args);
-                }
+                if (c.type == type && c.func != nil)
+                    c.func(context, type, error, requestId, c.arg, args);
             }
         }
 
@@ -152,7 +152,7 @@ module LobbyUtil
             var roomId = room["roomId"];
             var isExisted = false;
 
-            foreach (var [i, oldRoom] in oldList.iterator_with_index)
+            foreach (|var i, var oldRoom| in oldList.iterator_with_index)
             {
                 if (roomId == oldRoom["roomId"])
                 {
@@ -271,7 +271,7 @@ module LobbyUtil
             if (arg != self)
                 return;
 
-            var [roomId, rtt] = args;
+            |var roomId, var rtt| = args;
             var func = self.onRoomUpdate_;
             foreach (var room in self.roomList_)
             {

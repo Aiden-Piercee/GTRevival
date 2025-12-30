@@ -18,17 +18,17 @@
 
 module SoundMenu
 {
-    import RunViewerProject::TopRoot::*;
+    import PROJECT::TopRoot::*;
 
-    static black = main::menu::MColorObject(0.05f, 0.05f, 0.05f);
-    static red = main::menu::MColorObject(0.1f, 0.05f, 0.05f);
-    static blue = main::menu::MColorObject(0.05f, 0.05f, 0.1f);
-    static purple = main::menu::MColorObject(0.075f, 0.05f, 0.1f);
-    static green = main::menu::MColorObject(0.05f, 0.1f, 0.05f);
-    static yellow = main::menu::MColorObject(0.1f, 0.1f, 0.05f);
-    static cyan = main::menu::MColorObject(0.05f, 0.1f, 0.1f);
-    static gray = main::menu::MColorObject(0.1f, 0.1f, 0.1f);
-    static orange = main::menu::MColorObject(0.1f, 0.075f, 0.05f);
+    static black = main::menu::MColorObject(0.05, 0.05, 0.05);
+    static red = main::menu::MColorObject(0.1, 0.05, 0.05);
+    static blue = main::menu::MColorObject(0.05, 0.05, 0.1);
+    static purple = main::menu::MColorObject(0.075, 0.05, 0.1);
+    static green = main::menu::MColorObject(0.05, 0.1, 0.05);
+    static yellow = main::menu::MColorObject(0.1, 0.1, 0.05);
+    static cyan = main::menu::MColorObject(0.05, 0.1, 0.1);
+    static gray = main::menu::MColorObject(0.1, 0.1, 0.1);
+    static orange = main::menu::MColorObject(0.1, 0.075, 0.05);
     
     static engine_file_size = nil;
     static mstream_player_instance = nil;
@@ -269,7 +269,7 @@ module SoundMenu
 
         var items = Array();
 
-        entries.each((entry) => 
+        entries.each(function(entry)
         {
             var itemlabel = "%s/%s".format(label, entry);
             var menu = MenuItem(MenuItemTEXT, itemlabel, nil, nil, on_update_engine_type_item, on_select_engine_type);
@@ -353,7 +353,7 @@ module SoundMenu
                 var items = Array();
                 foreach (var entry in list)
                 {
-                    var menu = MenuItem(MenuItemTEXT, entry, nil, nil, nil, (context, index, menuitem, item, menu) => 
+                    var menu = MenuItem(MenuItemTEXT, entry, nil, nil, nil, function(context, index, menuitem, item, menu)
                     {
                         var label = menuitem.label;
                         if (label != "(STOP)")
@@ -363,20 +363,20 @@ module SoundMenu
                     });
 
                     menu.arg = menuitem.label;
-                    menu.on_keypress_func = (context, event, index, menuitem, item, arg) => 
+                    menu.on_keypress_func = function(context, event, index, menuitem, item, arg)
                     {
                         switch (event.keysym)
                         {
                             case CELL_PAD_CTRL_START:
                                 msoundeffect_instance.play(menuitem.label);
-                                return STATE_YIELD;
+                                return EVENTRESULT_FILTER;
 
                             case CELL_PAD_CTRL_SELECT:
                                 msoundeffect_instance.play("");
-                                return STATE_YIELD;
+                                return EVENTRESULT_FILTER;
                         }
 
-                        return STATE_EXIT;
+                        return EVENTRESULT_CONTINUE;
                     };
 
                     items.push(menu);
@@ -470,7 +470,7 @@ module SoundMenu
             else
                 __toplevel__::System::pr("%{pair[0]} / %{car} : file not found (%{ex_path})\n");
 
-            var result = pdistd::GetFileStatus(start_path); // FIX: Fixed bug, was ex_path instead of start_path
+            var result = pdistd::GetFileStatus(ex_path); // BUG: 'ex_path' instead of 'start_path'
             if (result['result'] == pdistd::FileError::OK)
                 size_start = result['size'];
             else

@@ -12,7 +12,7 @@
 
 
 
-module LiveTimingRoot
+module ROOT
 {
     static localized_text_page = "RaceProject::LiveTimingRoot";
 
@@ -83,11 +83,11 @@ module LiveTimingRoot
             menu::FrameInterval = self.sPrevFrameInterval;
 
             self.sPrevFrameInterval = nil;
+
+            RaceRoot.Info.visible = true;
+
+            context.unloadGpb("%{main::PROJECT_ROOT_DIR}/race", "LiveTimingRoot");
         }
-
-        RaceRoot.Info.visible = true;
-
-        context.unloadGpb("%{main::PROJECT_ROOT_DIR}/race", "LiveTimingRoot");
     }
 
     method onTick(context)
@@ -203,7 +203,7 @@ module LiveTimingRoot
             MainPane::MapArea::CourseLogo.image_path = "/piece/gt6/course_logo_M/%s.img".format(course_info.Logo);
             
             var is_endurance = isEndurance(context);
-            menu::LiveTimingUtil::initialize(MainPane, context, ORG, LiveTimingRoot::hidden, is_endurance);
+            menu::LiveTimingUtil::initialize(MainPane, context, ORG, ROOT::hidden, is_endurance);
 
             ContextMain.disableInput();
 
@@ -213,7 +213,7 @@ module LiveTimingRoot
 
             self.visible = true;
 
-            actor.on_effect_end = (context) => 
+            actor.on_effect_end = function(context)
             {
                 actor.on_effect_end = nil;
                 ContextMain.enableInput();
@@ -256,7 +256,7 @@ module LiveTimingRoot
                 if (self.base_rank_list == nil)
                     self.base_rank_list = racers_list;
 
-                var [new_base_rank_list, move_index_list] = pdistd::TraceRankList(self.base_rank_list, racers_list, 16);
+                |var new_base_rank_list, var move_index_list| = pdistd::TraceRankList(self.base_rank_list, racers_list, 16);
                 self.base_rank_list = new_base_rank_list;
             }
 

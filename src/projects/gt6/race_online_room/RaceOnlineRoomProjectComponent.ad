@@ -1,10 +1,10 @@
 module RaceOnlineRoomProjectComponent::DialogParts::DialogFrame
 {
 
-    method appear(warp = false, period = 0.25f)
+    method appear(warp = false, period = 0.25)
     {
         if (self.actor == nil)
-            self.actor = main::menu::MFadeActor(self, 1f);
+            self.actor = main::menu::MFadeActor(self, 1.0);
         self.actor.period = period;
         self.actor.out = false;
         self.actor.restart();
@@ -14,10 +14,10 @@ module RaceOnlineRoomProjectComponent::DialogParts::DialogFrame
     }
 
 
-    method hide(warp = false, period = 0.25f)
+    method hide(warp = false, period = 0.25)
     {
         if (self.actor == nil)
-            self.actor = main::menu::MFadeActor(self, 1f);
+            self.actor = main::menu::MFadeActor(self, 1.0);
         self.actor.period = period;
         self.actor.out = true;
         self.actor.restart();
@@ -35,17 +35,7 @@ module RaceOnlineRoomProjectComponent::DialogParts::DialogFrame
 
 module RaceOnlineRoomProjectComponent::DialogParts::DialogFrame::Pane::Head
 {
-    module label
-    {
-        method onRealize()
-        {
-            if (pdiext::MSystemConfiguration::isSDTV())
-            {
-                self.scale_x = 2.4f;
-                self.scale_y = 2.4f;
-            }
-        }
-    }
+    SCALE_WIDGET_SDTV(label, 2.4);
 
     method setText(text)
     {
@@ -76,44 +66,13 @@ module RaceOnlineRoomProjectComponent::DialogParts::DialogFrame::Pane::Head
 
 module RaceOnlineRoomProjectComponent::DialogParts::OK
 {
-    module label
-    {
-        method onRealize()
-        {
-            if (pdiext::MSystemConfiguration::isSDTV())
-            {
-                self.scale_x = 2.4f;
-                self.scale_y = 2.4f;
-            }
-        }
-    }
-
-    module label_i
-    {
-        method onRealize()
-        {
-            if (pdiext::MSystemConfiguration::isSDTV())
-            {
-                self.scale_x = 2.4f;
-                self.scale_y = 2.4f;
-            }
-        }
-    }
+    SCALE_WIDGET_SDTV(label, 2.4);
+    SCALE_WIDGET_SDTV(label_i, 2.4);
 }
 
 module RaceOnlineRoomProjectComponent::DialogParts::GroupHeader
 {
-    module label
-    {
-        method onRealize()
-        {
-            if (pdiext::MSystemConfiguration::isSDTV())
-            {
-                self.scale_x = 2.4f;
-                self.scale_y = 2.4f;
-            }
-        }
-    }
+    SCALE_WIDGET_SDTV(label, 2.4);
 }
 
 module RaceOnlineRoomProjectComponent::GTModeMenus::StartMenu
@@ -182,7 +141,7 @@ module RaceOnlineRoomProjectComponent::GTModeMenus::StartMenu
 
         if (bonus != nil)
         {
-            var bonus100 = (bonus * 100f + 0.5f).toInt();
+            var bonus100 = (bonus * 100.0 + 0.5).toInt();
             var day = LoginBonusMap[bonus100];
         }
 
@@ -296,7 +255,7 @@ module RaceOnlineRoomProjectComponent::GTModeMenus::StartMenu
         var fade = self.Fade;
         fade.forward();
 
-        fade.start_delay = start_delay != nil ? start_delay : 0f;
+        fade.start_delay = start_delay != nil ? start_delay : 0.0;
         fade.start();
 
         if (warp == true)
@@ -308,7 +267,7 @@ module RaceOnlineRoomProjectComponent::GTModeMenus::StartMenu
         var fade = self.Fade;
         fade.backward();
 
-        fade.end_delay = start_delay != nil ? start_delay : 0f;
+        fade.end_delay = start_delay != nil ? start_delay : 0.0;
         fade.start();
 
         if (warp == true)
@@ -320,197 +279,22 @@ module RaceOnlineRoomProjectComponent::ButtonHelp::ButtonHelpGT6
 {
     module hidden::ButtonSet
     {
-        module Circle::label
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module Circle::labeli
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module Square::label
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module Square::labeli
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module Triangle::label
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module Triangle::labeli
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module Cross::label
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module Cross::labeli
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module R1::label
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module R1::labeli
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module L1::label
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module L1::labeli
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module R2::label
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module R2::labeli
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module L2::label
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
-
-        module L2::labeli
-        {
-            method onRealize()
-            {
-                if (pdiext::MSystemConfiguration::isSDTV())
-                {
-                    self.scale_x = 2.4f;
-                    self.scale_y = 2.4f;
-                }
-            }
-        }
+        SCALE_WIDGET_SDTV(Circle::label, 2.4);
+        SCALE_WIDGET_SDTV(Circle::labeli, 2.4);
+        SCALE_WIDGET_SDTV(Square::label, 2.4);
+        SCALE_WIDGET_SDTV(Square::labeli, 2.4);
+        SCALE_WIDGET_SDTV(Triangle::label, 2.4);
+        SCALE_WIDGET_SDTV(Triangle::labeli, 2.4);
+        SCALE_WIDGET_SDTV(Cross::label, 2.4);
+        SCALE_WIDGET_SDTV(Cross::labeli, 2.4);
+        SCALE_WIDGET_SDTV(R1::label, 2.4);
+        SCALE_WIDGET_SDTV(R1::labeli, 2.4);
+        SCALE_WIDGET_SDTV(L1::label, 2.4);
+        SCALE_WIDGET_SDTV(L1::labeli, 2.4);
+        SCALE_WIDGET_SDTV(R2::label, 2.4);
+        SCALE_WIDGET_SDTV(R2::labeli, 2.4);
+        SCALE_WIDGET_SDTV(L2::label, 2.4);
+        SCALE_WIDGET_SDTV(L2::labeli, 2.4);
     }
 
     method clear()
@@ -527,6 +311,7 @@ module RaceOnlineRoomProjectComponent::ButtonHelp::ButtonHelpGT6
             self.prev_button_set = nil;
         }
 
+        // COMPILER NOTE: References to attributes should not be static'd
         self.current_button_set = nil;
         self.prev_button_set = nil;
         self.button_sets = Map();
@@ -597,7 +382,7 @@ module RaceOnlineRoomProjectComponent::ButtonHelp::ButtonHelpGT6
         var order_list = [];
         foreach (var set in set_list)
         {
-            var [button_name, text] = set;
+            |var button_name, var text| = set;
             if (button_name == "Enter")
             {
                 if (text == nil)
@@ -791,17 +576,7 @@ module RaceOnlineRoomProjectComponent::Tooltip::BalloonTip::Tip
     attribute distance;
     attribute visible_time;
 
-    module Text::TextFace
-    {
-        method onRealize()
-        {
-            if (pdiext::MSystemConfiguration::isSDTV())
-            {
-                self.scale_x = 2.4f;
-                self.scale_y = 2.4f;
-            }
-        }
-    }
+    SCALE_WIDGET_SDTV(Text::TextFace, 2.4);
 
     method set_value(context, widget, text, display_position, distance, visible_time)
     {
@@ -932,7 +707,7 @@ module RaceOnlineRoomProjectComponent::Tooltip::BalloonTip::Tip
         {
             self.VisibleEffect.setStartDuration(0, self.visible_time);
             self.VisibleEffect.restart();
-            self.VisibleEffect.on_effect_end = (context) => 
+            self.VisibleEffect.on_effect_end = function(context)
             {
                 self.is_visible_end = true;
                 self.VisibleEffect.on_effect_end = nil;
@@ -1028,7 +803,7 @@ module RaceOnlineRoomProjectComponent::MapClip
     {
         if (course_info.Scenery && !ORG.getDerivedMapData())
         {
-            self.thread0 = Thread((context) => 
+            self.thread0 = Thread(function(context)
             {
                 while (!ORG.getDerivedMapData())
                     Thread::Sleep(1.0);
@@ -1061,32 +836,12 @@ module RaceOnlineRoomProjectComponent::MapClip
 
 module RaceOnlineRoomProjectComponent::HDPulldown::Item
 {
-    module label
-    {
-        method onRealize()
-        {
-            if (pdiext::MSystemConfiguration::isSDTV())
-            {
-                self.scale_x = 2.4f;
-                self.scale_y = 2.4f;
-            }
-        }
-    }
+    SCALE_WIDGET_SDTV(label, 2.4);
 }
 
 module RaceOnlineRoomProjectComponent::HDSetupPanel::BaseRow
 {
-    module label
-    {
-        method onRealize()
-        {
-            if (pdiext::MSystemConfiguration::isSDTV())
-            {
-                self.scale_x = 2.4f;
-                self.scale_y = 2.4f;
-            }
-        }
-    }
+    SCALE_WIDGET_SDTV(label, 2.4);
 }
 
 module RaceOnlineRoomProjectComponent::RaceMenu::Template::SBox0::ScalarInterpolator

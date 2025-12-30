@@ -86,8 +86,8 @@ module SliderPopup
         var scalebar = self.ScaleBar;
         var stepscale = Math::log10(scalebar.step);
         var precision = stepscale >= 0.0 ? 0 : Math::ceil(-stepscale).toInt();
-        
         self.quantizer = 10.0 ** precision;
+        
         if (precision <= 0)
             self.format_string = "%d";
         else
@@ -129,12 +129,12 @@ module SliderPopup
 
     method onActivate(context)
     {
-        return STATE_YIELD;
+        return EVENTRESULT_FILTER;
     }
 
     method onCancel(context)
     {
-        return STATE_YIELD;
+        return EVENTRESULT_FILTER;
     }
 }
 

@@ -12,7 +12,7 @@
 
 
 
-module CourseMakerLauncherRoot
+module ROOT
 {
     static watcher;
     static suspender;
@@ -73,7 +73,7 @@ module CourseMakerLauncherRoot
                 continue;
         }
 
-        ted_list.sort((e1, e2) => e1[1]["_time"] > e2[1]["_time"]);
+        ted_list.sort(function(e1, e2) { return e1[1]["_time"] > e2[1]["_time"]; });
         var fname = ted_list[0][0];
         var path = dir + "/" + fname;
         var fst = pdistd::ReadFile(path);
@@ -96,7 +96,7 @@ module CourseMakerLauncherRoot
         var user_id = Grim2.getLoginUserId();
         var course_list = [];
 
-        var request = main::Course.requestList(user_id, (args) => {});
+        var request = main::Course.requestList(user_id, function(args) {});
         if (Grim2Util::join(context, request))
             course_list = main::Course.decodeCourseList(request);
         else
@@ -122,7 +122,7 @@ module CourseMakerLauncherRoot
     {
         var ted = nil;
         var ted_path = main::Course.getTedPath(course_id);
-        var request = main::Course.requestTed(course_id, (args) => {});
+        var request = main::Course.requestTed(course_id, function(args) {});
         if (Grim2Util::join(context, request))
         {
             var fst = pdistd::ReadFile(ted_path);
@@ -219,7 +219,7 @@ module CourseMakerLauncherRoot
     {
         suspend_watcher();
 
-        self.create_watcher(context, (context) => 
+        self.create_watcher(context, function(context)
         {
             if (is_suspend())
                 return;
@@ -245,7 +245,7 @@ module CourseMakerLauncherRoot
     {
         context.cursor_visible = false;
 
-        CourseMakerLauncherRoot.setFocus(nil);
+        ROOT.setFocus(nil);
 
         self.course_id = GAME_STATUS.user_profile.context.coursemaker_course_id;
         if (self.modal != nil)
@@ -254,7 +254,7 @@ module CourseMakerLauncherRoot
             var actor = self.OpenActor;
             actor.forward();
             actor.restart();
-            actor.on_effect_end = (context) => 
+            actor.on_effect_end = function(context)
             {
                 actor.on_effect_end = nil;
                 PageUtil::invisibleUnderPages(context, self);
@@ -275,7 +275,7 @@ module CourseMakerLauncherRoot
 
         if (self.course_id != course_id)
         {
-            context.pushEvent(menu::MFunctionEvent((context) => 
+            context.pushEvent(menu::MFunctionEvent(function(context)
             {
                 var res;
                 if (self.course_id == 0)
@@ -317,11 +317,11 @@ module CourseMakerLauncherRoot
     method onCancel(context)
     {
         if (is_suspend())
-            return STATE_YIELD;
+            return EVENTRESULT_FILTER;
 
         main::sound.play("cancel");
-        CourseMakerLauncherRoot.close(context);
-        return STATE_YIELD;
+        ROOT.close(context);
+        return EVENTRESULT_FILTER;
     }
 
     module alias_Dialog
@@ -349,7 +349,7 @@ module CourseMakerLauncherRoot
             context.cursor_visible = true;
             self.insensitive = false;
 
-            CourseMakerLauncherRoot.setFocus(alias_ButtonOK);
+            ROOT.setFocus(alias_ButtonOK);
             self.event = main::menu::EventLoop(context);
             self.event.enter();
             return self.result;
@@ -364,7 +364,7 @@ module CourseMakerLauncherRoot
                 self.event = nil;
                 self.insensitive = true;
 
-                CourseMakerLauncherRoot.setFocus(nil);
+                ROOT.setFocus(nil);
                 context.cursor_visible = false;
             }
         }
@@ -378,8 +378,8 @@ module CourseMakerLauncherRoot
         method onCancel(context)
         {
             main::sound.play("cancel");
-            CourseMakerLauncherRoot.setFocus(alias_ButtonCancel);
-            return STATE_YIELD;
+            ROOT.setFocus(alias_ButtonCancel);
+            return EVENTRESULT_FILTER;
         }
 
         module alias_ButtonOK
@@ -389,7 +389,7 @@ module CourseMakerLauncherRoot
                 main::sound.play("ok");
                 self.alias_Dialog.result = true;
                 self.alias_Dialog.close(context);
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             }
         }
 
@@ -400,7 +400,7 @@ module CourseMakerLauncherRoot
                 main::sound.play("ok");
                 self.alias_Dialog.result = false;
                 self.alias_Dialog.close(context);
-                return STATE_YIELD;
+                return EVENTRESULT_FILTER;
             }
         }
     }

@@ -12,7 +12,7 @@
 
 
 
-module StereogramRoot
+module ROOT
 {
     hidden.visible = false;
 
@@ -33,8 +33,8 @@ module StereogramRoot
         var option = main::GAME_STATUS.user_profile.option;
         SettingFrame::Pane::ScrolledBody::clip::space::UseStereogram::OptionMenu.setIndex(context, 1 - option.monitor_use_parallax_view);
         SettingFrame::Pane::ScrolledBody::clip::space::ParallaxMode.setIndex(context, option.monitor_parallax_change_mode);
-        SettingFrame::Pane::ScrolledBody::clip::space::Parallax::slider.index = (option.monitor_view_offset_x * 100f + 0.5f).toInt();
-        SettingFrame::Pane::ScrolledBody::clip::space::Convergence::slider.index = (option.monitor_convergence * 100f + 0.5f).toInt();
+        SettingFrame::Pane::ScrolledBody::clip::space::Parallax::slider.index = (option.monitor_view_offset_x * 100.0 + 0.5).toInt();
+        SettingFrame::Pane::ScrolledBody::clip::space::Convergence::slider.index = (option.monitor_convergence * 100.0 + 0.5).toInt();
     }
 
     method apply(context)
@@ -42,8 +42,8 @@ module StereogramRoot
         var option = main::GAME_STATUS.user_profile.option;
         option.monitor_use_parallax_view = 1 - SettingFrame::Pane::ScrolledBody::clip::space::UseStereogram::OptionMenu.index;
         option.monitor_parallax_change_mode = SettingFrame::Pane::ScrolledBody::clip::space::ParallaxMode::OptionMenu.getItem().real_value;
-        option.monitor_view_offset_x = SettingFrame::Pane::ScrolledBody::clip::space::Parallax::slider.index.toFloat() / 100f;
-        option.monitor_convergence = SettingFrame::Pane::ScrolledBody::clip::space::Convergence::slider.index.toFloat() / 100f;
+        option.monitor_view_offset_x = SettingFrame::Pane::ScrolledBody::clip::space::Parallax::slider.index.toFloat() / 100.0;
+        option.monitor_convergence = SettingFrame::Pane::ScrolledBody::clip::space::Convergence::slider.index.toFloat() / 100.0;
 
         option.apply();
     }
@@ -55,10 +55,10 @@ module StereogramRoot
 
         SettingFrame::Pane::ScrolledBody::clip::space::ParallaxMode.setPopupItems(context);
         SettingFrame::Pane::ScrolledBody::clip::space::Parallax::slider.setup(context);
-        SettingFrame::Pane::ScrolledBody::clip::space::Convergence::slider.format_callback = (context, value) => 
+        SettingFrame::Pane::ScrolledBody::clip::space::Convergence::slider.format_callback = function(context, value) 
         {
-            var scale = 0.01f;
-            var value100 = 100 * ((scale * value) + 0.005f);
+            var scale = 0.01;
+            var value100 = 100 * ((scale * value) + 0.005);
             return pdiext::GetNumberString(value100, 2);
         }
 
@@ -67,7 +67,7 @@ module StereogramRoot
 
         reflect(context);
         SettingFrame.adjust_scrolled_body();
-        StereogramRoot.setFocus(SettingFrame::Pane::ScrolledBody::clip::space::UseStereogram::OptionMenu);
+        ROOT.setFocus(SettingFrame::Pane::ScrolledBody::clip::space::UseStereogram::OptionMenu);
     }
 
     method onCancel(context, event, item)
@@ -75,13 +75,13 @@ module StereogramRoot
         main::sound.play("cancel");
         if (gDirectApplyMode)
         {
-            StereogramRoot.apply();
-            StereogramRoot.close(context);
+            ROOT.apply();
+            ROOT.close(context);
         }
         else
-            StereogramRoot.setFocus(SettingFrame::Pane::Foot::Cancel);
+            ROOT.setFocus(SettingFrame::Pane::Foot::Cancel);
         
-        return 2;
+        return EVENTRESULT_FILTER;
     }
 
     module SettingFrame::Pane::ScrolledBody::clip::space::ParallaxMode
@@ -115,7 +115,7 @@ module StereogramRoot
                 var parallax_mode = parallax_mode_list[i];
                 var item = hidden::PulldownItem.doCopy();
 
-                item.label.text = context.translate(StereogramRoot, parallax_mode[0]);
+                item.label.text = context.translate(ROOT, parallax_mode[0]);
                 item.defineAttribute("real_value", 0);
                 item.real_value = parallax_mode[1];
                 sIndexMap[item.real_value] = i;
@@ -133,9 +133,9 @@ module StereogramRoot
         method onActivate(context)
         {
             main::sound.play("ok");
-            StereogramRoot.apply();
-            StereogramRoot.close(context);
-            return 2;
+            ROOT.apply();
+            ROOT.close(context);
+            return EVENTRESULT_FILTER;
         }
     }
 
@@ -144,15 +144,15 @@ module StereogramRoot
         method onActivate(context)
         {
             main::sound.play("ok");
-            StereogramRoot.close(context);
-            return 2;
+            ROOT.close(context);
+            return EVENTRESULT_FILTER;
         }
 
         method onCancel(context)
         {
             main::sound.play("cancel");
-            StereogramRoot.close(context);
-            return 2;
+            ROOT.close(context);
+            return EVENTRESULT_FILTER;
         }
     }
 }

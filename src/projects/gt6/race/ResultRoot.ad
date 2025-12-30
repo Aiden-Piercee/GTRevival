@@ -12,7 +12,7 @@
 
 
 
-module ResultRoot
+module ROOT
 {
     static sUpdateCallback = nil;
 
@@ -74,7 +74,7 @@ module ResultRoot
                 break;
         }
 
-        foreach (var [k, v] in [0 : "red", 1 : "gray", 2 : "basic_black"])
+        foreach (|var k, var v| in [0 : "red", 1 : "gray", 2 : "basic_black"])
             item.No[v].visible = k == color;
 
         if (slot_id == nil || slot_id == -1)
@@ -82,7 +82,7 @@ module ResultRoot
             foreach (var name in ["No", "Driver", "Car", "Time", "Gap"])
             {
                 item[name].label.text =  "--";
-                item[name].label.opacity = 0.6f;
+                item[name].label.opacity = 0.6;
             }
 
             item.Flag.image.image_path = "";
@@ -104,7 +104,7 @@ module ResultRoot
         var cp = car.getParameter();
         var dp = driver.getParameter();
 
-        await () => 
+        await AwaitTask(function()
         {
             if (gSequenceCondition.game_mode == gtengine::GameMode::ONLINE_ROOM)
             {
@@ -261,7 +261,7 @@ module ResultRoot
             item.Car.active = target;
             item.Time.active = target;
             item.Gap.active = target;
-        }
+        });
 
         yield;
     }
@@ -269,7 +269,7 @@ module ResultRoot
     method setup_entry(context, item, order, slot_id, base_delay)
     {
         item.No.label.text = "%d".format(order + 1);
-        (*ResultRoot.*sUpdateCallback)(context, item, order, slot_id, true);
+        (ROOT.*sUpdateCallback)(context, item, order, slot_id, true);
     }
 
     static s_winner_decided_and_online_room = nil;
@@ -288,14 +288,14 @@ module ResultRoot
         for (;;)
         {
             _updateBoard(context);
-            Thread::Sleep(0.5f);
+            Thread::Sleep(0.5);
         }
     }
 
     function _updateBoard(context)
     {
         var rank_list = ORG.getRace().getRankList();
-        BoardUtil::update(context, ResultRoot, sUpdateCallback, rank_list);
+        BoardUtil::update(context, ROOT, sUpdateCallback, rank_list);
         gSequenceCondition.result_rank_list = rank_list;
     }
 
@@ -310,9 +310,9 @@ module ResultRoot
     // Root open & others
 
     static confetti_color = [
-        [91f / 255f, 80f / 255f, 20f / 255f],
-        [55f / 255f, 55f / 255f, 55f / 255f],
-        [60f / 255f, 30f / 255f, 15f / 255f],
+        [91.0 / 255.0, 80.0 / 255.0, 20.0 / 255.0],
+        [55.0 / 255.0, 55.0 / 255.0, 55.0 / 255.0],
+        [60.0 / 255.0, 30.0 / 255.0, 15.0 / 255.0],
     ];
 
     method open(context, online, rank = -1)
@@ -345,9 +345,9 @@ module ResultRoot
         if (confetti_rank > 0)
         {
             var color = confetti_color[confetti_rank - 1];
-            ResultRoot::ParticleFace.is_enable = true;
+            ROOT::ParticleFace.is_enable = true;
 
-            for (var cit = ResultRoot::ParticleFace.first_emitter; cit != nil; cit = cit.next_emitter)
+            for (var cit = ROOT::ParticleFace.first_emitter; cit != nil; cit = cit.next_emitter)
             {
                 cit.color0 = color;
                 cit.color1 = color;
@@ -356,7 +356,7 @@ module ResultRoot
         }
         else
         {
-            ResultRoot::ParticleFace.is_enable = false;
+            ROOT::ParticleFace.is_enable = false;
         }
 
         self.sUseFastest = rp.race_type == gtengine::RaceType::TIMEATTACK;
@@ -370,7 +370,7 @@ module ResultRoot
         if (self.sOnline)
             context.suspendEventLoop();
 
-        context.pushPage(ResultRoot);
+        context.pushPage(ROOT);
     }
 
     method close(context)
@@ -384,10 +384,10 @@ module ResultRoot
         if (gSequenceCondition.game_mode == gtengine::GameMode::RACE_EDIT)
         {
             var retry_msg = "RETRY";
-            if (DialogUtil::openConfirmDialog(context, DialogUtil::YESNO, context.translate(ResultRoot, retry_msg)))
+            if (DialogUtil::openConfirmDialog(context, DialogUtil::YESNO, context.translate(ROOT, retry_msg)))
             {
                 ORG.pauseHandleAvailable = false;
-                SoundUtil::BGMFadeout(0.5f);
+                SoundUtil::BGMFadeout(0.5);
                 quit_flg = false;
                 RaceRoot.restart(context);
             }
@@ -397,7 +397,7 @@ module ResultRoot
             RaceRoot.quit(context);
         else
         {
-            context.popPage(ResultRoot);
+            context.popPage(ROOT);
             ORG.pauseAvailable = true;
             RaceRoot.visible = true;
         }
@@ -405,10 +405,10 @@ module ResultRoot
 
     method onInitialize(context)
     {
-        self.running_text = context.translate(ResultRoot, "RUNNING");
+        self.running_text = context.translate(ROOT, "RUNNING");
         var rank_list = ORG.getRace().getRankList();
 
-        BoardUtil::initialize(context, ResultRoot, setup_entry,
+        BoardUtil::initialize(context, ROOT, setup_entry,
             Info2::Frame,
             nil,
             nil,
@@ -517,7 +517,7 @@ module ResultRoot
         var course_info = getCurrentCourseInfo();
         var gp = gSequenceCondition.gp;
 
-        var [title, color] = getTitleInfo(context, gp);
+        |var title, var color| = getTitleInfo(context, gp);
 
         foreach (var c in ["red", "gray", "basic_black"])
         {
@@ -556,7 +556,7 @@ module ResultRoot
             var hideStartWay = false;
             var hideAll = false;
 
-            var [rc, sinfo] = OnlineSession.getRoomConfig(true);
+            |var rc, var sinfo| = OnlineSession.getRoomConfig(true);
             if (gp.event.game_mode == gtengine::GameMode::ONLINE_ROOM)
                 title = rc.comment;
 
@@ -669,7 +669,7 @@ module ResultRoot
             close(context);
         }
 
-        return 2;
+        return EVENTRESULT_FILTER;
     }
 
     method onActivate(context)
@@ -680,13 +680,13 @@ module ResultRoot
             close(context);
         }
 
-        return 2;
+        return EVENTRESULT_FILTER;
     }
 
     method onKeyPress(context, event)
     {
         if (LeaveDetectUtil::activated(context, event))
-            return 2;
+            return EVENTRESULT_FILTER;
 
         if (event.keysym == CELL_PAD_CTRL_START)
         {
@@ -696,10 +696,10 @@ module ResultRoot
                 close(context);
             }
 
-            return 2;
+            return EVENTRESULT_FILTER;
         }
         else
-            return 0;
+            return EVENTRESULT_CONTINUE;
     }
 
     module Info2
@@ -716,7 +716,7 @@ module ResultRoot
             foreach (var a in list)
                 a.restart();
 
-            var start_duration = 0f;
+            var start_duration = 0.0;
             if (Frame.defined("Board"))
             {
                 var listbox = Frame['Board']['ListBox'];
@@ -726,7 +726,7 @@ module ResultRoot
                     w.Actors::Rotate3D.setStartDuration(0, start_duration);
                     w.Actors::Opacity.setStartDuration(0, start_duration);
                     w.Actors.restart();
-                    start_duration += 0.2f;
+                    start_duration += 0.2;
                 }
             }
         }
@@ -747,7 +747,7 @@ module ResultRoot
                 info.bg::Opacity,
             ];
 
-            if (ResultRoot.sOnline)
+            if (ROOT.sOnline)
                 list.push(header.EventTitle_ForOpenLobby::Opacity)
             else
                 list.push(header.EventTitle::Opacity);
@@ -755,7 +755,7 @@ module ResultRoot
             foreach (var a in list)
                 a.restart();
 
-            info.bg::Opacity.on_effect_end = (context) => 
+            info.bg::Opacity.on_effect_end = function(context)
             {
                 info.bg::Opacity.on_effect_end = nil;
                 beginGridAnimation(context);

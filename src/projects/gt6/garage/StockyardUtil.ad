@@ -32,7 +32,7 @@ module StockyardUtil
 
     function load(context)
     {
-        var [success, result] = SaveDataUtilGT6::loadStockyardData(context);
+        |var success, var result| = SaveDataUtilGT6::loadStockyardData(context);
         var st = nil;
         var new_data = false;
 
@@ -75,7 +75,7 @@ module StockyardUtil
 
             mgarage.copyDLCCondition(GAME_STATUS.user_profile.garage);
 
-            &mgarage_ref = mgarage;
+            *mgarage_ref = mgarage;
 
             GAME_STATUS.user_profile.garage_stockyard_carcount = mgarage.getCarCount();
             return true;

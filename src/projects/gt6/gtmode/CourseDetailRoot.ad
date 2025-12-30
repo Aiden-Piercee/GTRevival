@@ -12,7 +12,7 @@
 
 
 
-module CourseDetailRoot
+module ROOT
 {
     attribute course;
     attribute result;
@@ -21,7 +21,7 @@ module CourseDetailRoot
 
     function checkLogin(context)
     {
-        var course = CourseDetailRoot.course;
+        var course = ROOT.course;
         if (CourseMakerUtil::isSampleCourse(course["course_id"]))
             return true;
 
@@ -67,9 +67,9 @@ module CourseDetailRoot
 
     method playCourse(context, course)
     {
-        CourseDetailRoot.play_course = true;
-        CourseDetailRoot.result = false;
-        CourseDetailRoot.close(context);
+        ROOT.play_course = true;
+        ROOT.result = false;
+        ROOT.close(context);
     }
 
     method onRealize(manager)
@@ -105,9 +105,9 @@ module CourseDetailRoot
                 L.CourseImage.image_path = image_path;
             else
             {
-                Photo.requestPngImage(photo_id, (args) => 
+                Photo.requestPngImage(photo_id, function(args)
                 {
-                    var [context, request] = args;
+                    |var context, var request| = args;
                     if (request.isDone())
                         L.CourseImage.image_path = image_path;
                 })
@@ -165,7 +165,7 @@ module CourseDetailRoot
 
         setComment(context, self.course["comment"]);
 
-        CourseDetailRoot.setFocus(L.Buttons::vbox::Play);
+        ROOT.setFocus(L.Buttons::vbox::Play);
     }
 
     method setComment(context, comment)
@@ -189,7 +189,7 @@ module CourseDetailRoot
     {
         sound.play("cancel");
         self.close(context);
-        return STATE_YIELD;
+        return EVENTRESULT_FILTER;
     }
 
     module SettingFrame2::Pane::Left::Buttons::vbox
@@ -199,18 +199,18 @@ module CourseDetailRoot
             method onActivate(context)
             {
                 if (!checkLogin(context))
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
 
                 if (!isRidingCar())
                 {
                     sound.play("disable");
                     ERROR(context, "CommonGTMode", "Message_PleaseSelectCar");
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
                 }
 
                 sound.play("next");
-                playCourse(context, CourseDetailRoot.course);
-                return STATE_YIELD;
+                playCourse(context, ROOT.course);
+                return EVENTRESULT_FILTER;
             }
         }
 
@@ -218,7 +218,7 @@ module CourseDetailRoot
         {
             method updateComment(context, course, sanitized_text)
             {
-                var request = main::Course.requestUpdateComment(course["course_id"], sanitized_text, (args) => {});
+                var request = main::Course.requestUpdateComment(course["course_id"], sanitized_text, function(args) {});
                 if (!Grim2Util::joinAwait(context, request))
                     return false;
     
@@ -229,18 +229,18 @@ module CourseDetailRoot
             method onActivate(context)
             {
                 if (!checkLogin(context))
-                    return 2;
+                    return EVENTRESULT_FILTER;
 
                 if (PDINetwork.isChatRestricted())
                 {
                     sound.play("disable");
                     ERROR(context, "OnlineMessage", "ERROR_CHAT_RESTRICTED_FUNCTION");
-                    return 2;
+                    return EVENTRESULT_FILTER;
                 }
 
                 sound.play("ok");
 
-                var course = CourseDetailRoot.course;
+                var course = ROOT.course;
                 var config = [
                     "limit_length" : 140,
                     "no_return" : false
@@ -248,30 +248,30 @@ module CourseDetailRoot
 
                 var text = course["comment"];
 
-                var message = OSKUtil::open(context, text, CourseDetailRoot, config);
+                var message = OSKUtil::open(context, text, ROOT, config);
                 message = trim(message);
 
                 if (message == nil || message == text)
-                    return 2;
+                    return EVENTRESULT_FILTER;
 
                 VulgarityFilterUtil::begin();
-                var [res, sanitized_text] = VulgarityFilterUtil::check(message);
+                |var res, var sanitized_text| = VulgarityFilterUtil::check(message);
                 VulgarityFilterUtil::end();
 
                 if (!res)
                 {
                     GENERIC_RESULT(context, false);
-                    return 2;
+                    return EVENTRESULT_FILTER;
                 }
 
                 var res0 = updateComment(context, course, sanitized_text);
                 if (res0)
                 {
-                    CourseDetailRoot.setComment(context, sanitized_text);
+                    ROOT.setComment(context, sanitized_text);
                 }
 
                 GENERIC_RESULT(context, res0);
-                return 2;
+                return EVENTRESULT_FILTER;
             }
         }
 
@@ -279,7 +279,7 @@ module CourseDetailRoot
         {
             method updateTitle(context, course, sanitized_text)
             {
-                var request = main::Course.requestUpdateTitle(course["course_id"], sanitized_text, (args) => {});
+                var request = main::Course.requestUpdateTitle(course["course_id"], sanitized_text, function(args) {});
                 if (!Grim2Util::joinAwait(context, request))
                     return false;
     
@@ -290,38 +290,38 @@ module CourseDetailRoot
             method onActivate(context)
             {
                 if (!checkLogin(context))
-                    return 2;
+                    return EVENTRESULT_FILTER;
 
                 if (PDINetwork.isChatRestricted())
                 {
                     sound.play("disable");
                     ERROR(context, "OnlineMessage", "ERROR_CHAT_RESTRICTED_FUNCTION");
-                    return 2;
+                    return EVENTRESULT_FILTER;
                 }
 
                 sound.play("ok");
 
-                var course = CourseDetailRoot.course;
+                var course = ROOT.course;
                 var config = [
                     "limit_length" : 30,
                 ];
 
                 var text = course["title"];
 
-                var message = OSKUtil::open(context, text, CourseDetailRoot, config);
+                var message = OSKUtil::open(context, text, ROOT, config);
                 message = trim(message);
 
                 if (message == nil || message == text || message == "")
-                    return STATE_YIELD;
+                    return EVENTRESULT_FILTER;
 
                 VulgarityFilterUtil::begin();
-                var [res, sanitized_text] = VulgarityFilterUtil::check(message);
+                |var res, var sanitized_text| = VulgarityFilterUtil::check(message);
                 VulgarityFilterUtil::end();
 
                 if (!res)
                 {
                     GENERIC_RESULT(context, false);
-                    return 2;
+                    return EVENTRESULT_FILTER;
                 }
 
                 var res0 = updateTitle(context, course, sanitized_text);
@@ -333,7 +333,7 @@ module CourseDetailRoot
                 }
 
                 GENERIC_RESULT(context, res0);
-                return 2;
+                return EVENTRESULT_FILTER;
             }
         }
 
@@ -341,7 +341,7 @@ module CourseDetailRoot
         {
             method deleteImpl(context, course)
             {
-                var request = main::Course.requestDelete(course["course_id"], (args) => {});
+                var request = main::Course.requestDelete(course["course_id"], function(args) {});
                 if (!Grim2Util::joinAwait(context, request))
                     return false;
     
@@ -353,7 +353,7 @@ module CourseDetailRoot
             {
                 var myclub = nil;
                 var user_id = Grim2.getLoginUserId();
-                var request = Community.requestClubListByUser(user_id, (args) => {});
+                var request = Community.requestClubListByUser(user_id, function(args) {});
 
                 if (Grim2Util::joinAwait(context, request))
                 {
@@ -376,7 +376,7 @@ module CourseDetailRoot
 
                 var course_in_use = false;
                 var course_id = course["course_id"];
-                request = Community.requestEventListByClub(myclub["club_id"], (args) => {});
+                request = Community.requestEventListByClub(myclub["club_id"], function(args) {});
                 if (Grim2Util::joinAwait(context, request))
                 {
                     var event_list = Community.decodeEventList(request);
@@ -402,21 +402,21 @@ module CourseDetailRoot
             method onActivate(context)
             {
                 if (!checkLogin(context))
-                    return 2;
+                    return EVENTRESULT_FILTER;
 
                 sound.play("ok");
                 
                 if (!QUERY(context, "Community", "QUERY_REMOVE_COURSE"))
-                    return 2;
+                    return EVENTRESULT_FILTER;
 
                 if (!checkLogin(context))
-                    return 2;
+                    return EVENTRESULT_FILTER;
 
-                var course = CourseDetailRoot.course;
+                var course = ROOT.course;
                 if (!canRemove(context, course))
                 {
                     ERROR(context, "Community", "ERROR_CANT_DELETE_COUSE_IN_USE");
-                    return 2;
+                    return EVENTRESULT_FILTER;
                 }
 
                 var res = deleteImpl(context, course);
@@ -424,12 +424,12 @@ module CourseDetailRoot
 
                 if (res)
                 {
-                    &CourseDetailRoot.ref_removed = true;
-                    CourseDetailRoot.result = true;
-                    CourseDetailRoot.close(context);
+                    *ROOT.ref_removed = true;
+                    ROOT.result = true;
+                    ROOT.close(context);
                 }
 
-                return 2;
+                return EVENTRESULT_FILTER;
             }
         }
 
@@ -438,22 +438,22 @@ module CourseDetailRoot
             method onActivate(context)
             {
                 if (!checkLogin(context))
-                return 2;
+                    return EVENTRESULT_FILTER;
 
                 if (PDINetwork.isChatRestricted())
                 {
                     sound.play("disable");
                     ERROR(context, "OnlineMessage", "ERROR_CHAT_RESTRICTED_FUNCTION");
-                    return 2;
+                    return EVENTRESULT_FILTER;
                 }
 
-                var course = CourseDetailRoot.course;
+                var course = ROOT.course;
                 var status = course["status"];
 
                 if (status == 0)
                 {
                     sound.play("disable");
-                    return 2;
+                    return EVENTRESULT_FILTER;
                 }
 
                 var res0 = QUERY(context, "Community", status == 1 ? "QUERY_UPLOAD_COURSE" : "QUERY_UNUPLOAD_COURSE");
@@ -463,9 +463,9 @@ module CourseDetailRoot
                 var course_id = course["course_id"];
                 var request;
                 if (status == 1)
-                    request = main::Course.requestStatusPublic(course_id, (args) => {});
+                    request = main::Course.requestStatusPublic(course_id, function(args) {});
                 else if (status == 2)
-                    request = main::Course.requestStatusComplete(course_id, (args) => {});
+                    request = main::Course.requestStatusComplete(course_id, function(args) {});
                 
                 if (Grim2Util::joinAwait(context, request))
                 {
@@ -484,7 +484,7 @@ module CourseDetailRoot
                     GENERIC_RESULT(context, false);
                 }
 
-                return 2;
+                return EVENTRESULT_FILTER;
             }
         }
     }
@@ -494,7 +494,7 @@ module CourseDetailRoot
         method onFocusEnter(context)
         {
             context.target_widget = RSide::VScrollbar::pinch::pointer;
-            return 2;
+            return EVENTRESULT_FILTER;
         }
 
         method onKeyPress(context, event)
@@ -515,7 +515,7 @@ module CourseDetailRoot
                     status = 1;
             }
 
-            return 0;
+            return EVENTRESULT_CONTINUE;
         }
     }
 }

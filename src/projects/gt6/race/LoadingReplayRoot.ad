@@ -12,7 +12,7 @@
 
 
 
-module LoadingReplayRoot
+module ROOT
 {
     static sInfo;
 
@@ -20,7 +20,7 @@ module LoadingReplayRoot
     {
         sInfo = info;
 
-        SequenceUtil::startPage(context, LoadingReplayRoot);
+        SequenceUtil::startPage(context, ROOT);
     }
 
     method bspecfilter(display_name, rp)
@@ -41,7 +41,7 @@ module LoadingReplayRoot
         var dp = sInfo.getDriverParameter();
         
         var course_info = getCurrentCourseInfo();
-        var [bg, flag, event_text, bgm_code] = LaunchRaceUtil::getEventInfo(gp);
+        |var bg, var flag, var event_text, var bgm_code| = LaunchRaceUtil::getEventInfo(gp);
 
         info0::main.text = manager.translate("CourseName", course_info.Name);
         info0::sub.text = event_text;
@@ -66,6 +66,6 @@ module LoadingReplayRoot
     {
         main::sound.play("cancel");
         SequenceUtil::startSequence(context, main::GameSequence::MENU);
-        return 2;
+        return EVENTRESULT_FILTER;
     }
 }
